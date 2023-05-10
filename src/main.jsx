@@ -1,0 +1,70 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
+import Root, {
+  loader as rootLoader,
+  action as rootAction,
+} from "./routes/root.jsx";
+import ErrorPage from "./routes/errorPage";
+import WeatherRoot, { loader as weatherRootLoader } from "./routes/weatherRoot";
+import CurrentWeather from "./routes/currentWeather";
+import HourlyWeather from "./routes/hourlyWeather";
+import DailyWeather from "./routes/dailyWeather";
+import EditWeatherRoot, {
+  action as editWeatherRootAction,
+} from "./routes/edit";
+import { action as deleteAction } from "./routes/delete";
+import Index from "./routes";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route
+      path="/"
+      element={<Root />}
+      errorElement={<ErrorPage />}
+      loader={rootLoader}
+      action={rootAction}
+    >
+      <Route errorElement={<ErrorPage />}>
+        <Route index element={<Index />} />
+        <Route
+          path="/weathers/:weatherId"
+          element={<WeatherRoot />}
+          loader={weatherRootLoader}
+        >
+          <Route
+            path="/weathers/:weatherId/current"
+            element={<CurrentWeather />}
+          />
+          <Route
+            path="/weathers/:weatherId/hourly"
+            element={<HourlyWeather />}
+          />
+          <Route path="/weathers/:weatherId/daily" element={<DailyWeather />} />
+        </Route>
+        <Route
+          path="/weathers/:weatherId/edit"
+          element={<EditWeatherRoot />}
+          loader={weatherRootLoader}
+          action={editWeatherRootAction}
+        />
+        <Route
+          path="/weathers/:weatherId/delete"
+          action={deleteAction}
+          errorElement={<ErrorPage />}
+        />
+      </Route>
+    </Route>
+  )
+);
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
