@@ -19,6 +19,7 @@ export async function loader({ request }) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const weathers = await getWeathers(q);
+  // console.log("dane? ", weathers);
   return { weathers, q };
 }
 export default function Root() {

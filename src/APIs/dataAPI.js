@@ -1,9 +1,11 @@
 import localforage from "localforage";
 import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
+import { useWeatherApi } from "../APIs/weatherAPI";
 
 export async function getWeathers(query) {
-  await fakeNetwork(`getweathers:${query}`);
+  // console.log("wchodzi tu?");
+  // await fakeNetwork(`getweathers:${query}`);
   let weathers = await localforage.getItem("weathers");
   if (!weathers) weathers = [];
   if (query) {
@@ -13,7 +15,7 @@ export async function getWeathers(query) {
 }
 
 export async function createWeather() {
-  await fakeNetwork();
+  // await fakeNetwork();
   let id = Math.random().toString(36).substring(2, 9);
   let weather = { id, createdAt: Date.now() };
   let weathers = await getWeathers();
@@ -24,21 +26,27 @@ export async function createWeather() {
 }
 
 export async function getWeather(id) {
-  await fakeNetwork(`weather:${id}`);
+  // await fakeNetwork(`weather:${id}`);
   let weathers = await localforage.getItem("weathers");
   let weather = weathers.find((weather) => weather.id === id);
-  // console.log("odczyt: ", weather);
+  console.log("odczyt 1 lokacji: ", weather);
   return weather ?? null;
 }
 
 export async function updateWeather(id, updates) {
-  await fakeNetwork();
+  // await fakeNetwork();
+  // console.log("pokaz: ", updates);
+  const weatherData = await useWeatherApi(updates);
+  // console.log("updated weather", weatherData);
   let weathers = await localforage.getItem("weathers");
   let weather = weathers.find((weather) => weather.id === id);
   if (!weather) throw new Error("No weather found for", id);
-  Object.assign(weather, updates);
+  // console.log("dane w update: ", weather.city, weather.lat, weather.lng);
+  // const weatherData= await useWeatherApi(weather.lat,weather.lng)
+  const temp = { city: updates.city, ...weatherData };
+  // console.log("calosc: ", temp);
+  Object.assign(weather, temp);
   await set(weathers);
-  console.log("update: ", weather);
   return weather;
 }
 
@@ -58,22 +66,22 @@ function set(weathers) {
 }
 
 // fake a cache so we don't slow down stuff we've already seen
-let fakeCache = {};
+// let fakeCache = {};
 
-async function fakeNetwork(key) {
-  if (!key) {
-    fakeCache = {};
-  }
+// async function fakeNetwork(key) {
+//   if (!key) {
+//     fakeCache = {};
+//   }
 
-  if (fakeCache[key]) {
-    return;
-  }
+//   if (fakeCache[key]) {
+//     return;
+//   }
 
-  fakeCache[key] = true;
-  return new Promise((res) => {
-    setTimeout(res, Math.random() * 10);
-  });
-}
+//   fakeCache[key] = true;
+//   return new Promise((res) => {
+//     setTimeout(res, Math.random() * 10);
+//   });
+// }
 // export function concatObjects(obj1, obj2) {
 //   const result = { ...obj1 };
 //   for (let key in obj2) {

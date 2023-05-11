@@ -13,8 +13,12 @@ import Root, {
 } from "./routes/root.jsx";
 import ErrorPage from "./routes/errorPage";
 import WeatherRoot, { loader as weatherRootLoader } from "./routes/weatherRoot";
-import CurrentWeather from "./routes/currentWeather";
-import HourlyWeather from "./routes/hourlyWeather";
+import CurrentWeather, {
+  loader as currentWeatherLoader,
+} from "./routes/currentWeather";
+import HourlyWeather, {
+  loader as hourlyWeatherLoader,
+} from "./routes/hourlyWeather";
 import DailyWeather from "./routes/dailyWeather";
 import EditWeatherRoot, {
   action as editWeatherRootAction,
@@ -41,10 +45,12 @@ const router = createBrowserRouter(
           <Route
             path="/weathers/:weatherId/current"
             element={<CurrentWeather />}
+            loader={currentWeatherLoader}
           />
           <Route
             path="/weathers/:weatherId/hourly"
             element={<HourlyWeather />}
+            loader={hourlyWeatherLoader}
           />
           <Route path="/weathers/:weatherId/daily" element={<DailyWeather />} />
         </Route>
