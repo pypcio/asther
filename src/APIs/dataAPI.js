@@ -8,10 +8,20 @@ export async function getWeathers(query) {
   // await fakeNetwork(`getweathers:${query}`);
   let weathers = await localforage.getItem("weathers");
   if (!weathers) weathers = [];
+  // console.log("co sie dzieje z lon:", weathers[2]);
+  const fetchData = weathers.map((weather) =>
+    updateWeather(weather.id, {
+      city: weather.city,
+      lat: weather.lat?.toString(),
+      lon: weather.lon?.toString(),
+    })
+  );
+  let allData = await Promise.all(fetchData);
+  // console.log(allData);
   if (query) {
-    weathers = matchSorter(weathers, query, { keys: ["city", "createdAt"] });
+    allData = matchSorter(allData, query, { keys: ["city", "createdAt"] });
   }
-  return weathers.sort(sortBy("city", "createdAt"));
+  return allData.sort(sortBy("city", "createdAt"));
 }
 
 export async function createWeather() {
@@ -29,7 +39,7 @@ export async function getWeather(id) {
   // await fakeNetwork(`weather:${id}`);
   let weathers = await localforage.getItem("weathers");
   let weather = weathers.find((weather) => weather.id === id);
-  console.log("odczyt 1 lokacji: ", weather);
+  // console.log("odczyt 1 lokacji: ", weather);
   return weather ?? null;
 }
 
@@ -41,13 +51,21 @@ export async function updateWeather(id, updates) {
   let weathers = await localforage.getItem("weathers");
   let weather = weathers.find((weather) => weather.id === id);
   if (!weather) throw new Error("No weather found for", id);
-  // console.log("dane w update: ", weather.city, weather.lat, weather.lng);
-  // const weatherData= await useWeatherApi(weather.lat,weather.lng)
+  // console.log("dane w update: ", weather.city, weather.lat, weather.lon);
+  // const weatherData= await useWeatherApi(weather.lat,weather.lon)
   const temp = { city: updates.city, ...weatherData };
   // console.log("calosc: ", temp);
   Object.assign(weather, temp);
   await set(weathers);
   return weather;
+}
+export async function updateAllWeather(query) {
+  let weathers = await localforage.getItem("weathers");
+  if (!weathers) weathers = [];
+  if (query) {
+    weathers = matchSorter(weathers, query, { keys: ["city", "createdAt"] });
+  }
+  return weathers.sort(sortBy("city", "createdAt"));
 }
 
 export async function deleteWeather(id) {

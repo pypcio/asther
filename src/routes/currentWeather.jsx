@@ -5,7 +5,7 @@ import DownloadButton from "./DownloadButton";
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
-  console.log(weather);
+  // console.log(weather);
   const current = weather.current;
   return { current };
 }

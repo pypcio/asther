@@ -1,5 +1,5 @@
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { updateWeather } from "../APIs/dataAPI";
+import { getWeather, updateWeather } from "../APIs/dataAPI";
 // import { useWeatherApi } from "../APIs/weatherAPI";
 
 export async function action({ request, params }) {
@@ -8,6 +8,10 @@ export async function action({ request, params }) {
   await updateWeather(params.weatherId, update);
   //   console.log("szybki update: ", update);
   return redirect(`/weathers/${params.weatherId}/current`);
+}
+export async function loader({ params }) {
+  const weather = await getWeather(params.weatherId);
+  return { weather };
 }
 export default function EditWeatherRoot() {
   const { weather } = useLoaderData();

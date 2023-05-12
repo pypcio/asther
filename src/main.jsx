@@ -22,6 +22,7 @@ import HourlyWeather, {
 import DailyWeather from "./routes/dailyWeather";
 import EditWeatherRoot, {
   action as editWeatherRootAction,
+  loader as editWeatherLoader,
 } from "./routes/edit";
 import { action as deleteAction } from "./routes/delete";
 import Index from "./routes";
@@ -57,7 +58,7 @@ const router = createBrowserRouter(
         <Route
           path="/weathers/:weatherId/edit"
           element={<EditWeatherRoot />}
-          loader={weatherRootLoader}
+          loader={editWeatherLoader}
           action={editWeatherRootAction}
         />
         <Route

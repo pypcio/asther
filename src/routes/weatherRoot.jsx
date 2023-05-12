@@ -1,5 +1,12 @@
-import { Form, Link, Outlet, useLoaderData } from "react-router-dom";
+import {
+  Form,
+  Link,
+  Outlet,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
+import { useEffect } from "react";
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
@@ -8,8 +15,17 @@ export async function loader({ params }) {
 
 export default function WeatherRoot() {
   const { weather } = useLoaderData();
-  // console.log(weather);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      console.log("halo?");
+      navigate(0);
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   return (
     <div>
       <div id="weather">
