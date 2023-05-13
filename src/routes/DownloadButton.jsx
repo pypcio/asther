@@ -1,5 +1,5 @@
 function DownloadButton({ data }) {
-  //   console.log("pobierz", data);
+  // console.log("pobierz", data);
   const downloadCSV = (csv, filename) => {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -26,7 +26,7 @@ function DownloadButton({ data }) {
 
   const handleDownload = () => {
     const csv = exportToCSV(data);
-    downloadCSV(csv, "weather_data.csv");
+    downloadCSV(csv, `weather_data.csv`);
   };
 
   return <button onClick={handleDownload}>Download File</button>;

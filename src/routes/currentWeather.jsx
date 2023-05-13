@@ -1,22 +1,34 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigation } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import DownloadButton from "./DownloadButton";
+import { useEffect } from "react";
 
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
+  // console.log("wywołuje loader dla current:");
   const weather = await getWeather(params.weatherId);
   // console.log(weather);
-  const current = weather.current;
+  const current = await weather.current;
   return { current };
 }
 export default function CurrentWeather() {
   const { current } = useLoaderData();
-  // console.log(current);
+  const navigation = useNavigation();
+  // console.log("dane dla current: ", current);
+  // console.log("pokaz status strony", navigation.state);
   function convertWindDegreeToDirection(degree) {
     const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
     const index = degree ? Math.round((degree % 360) / 45) % 8 : null;
     return directions[index];
   }
+  // useEffect(() => {
+  //   const isChanged = async (id) => {
+  //     const fresh = await getWeather(id);
+  //     const current = fresh.current;
+  //     return current;
+  //   };
+  //   isChanged(current.id);
+  // }, []);
   return (
     <>
       <DownloadButton data={[current]} />

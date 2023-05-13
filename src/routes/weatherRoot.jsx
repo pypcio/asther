@@ -7,7 +7,9 @@ import {
 } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import { useEffect } from "react";
+import { convertedDate } from "../APIs/functions";
 export async function loader({ params }) {
+  // console.log("wwykonuje loader dla Roota: ");
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
   return { weather };
@@ -15,17 +17,19 @@ export async function loader({ params }) {
 
 export default function WeatherRoot() {
   const { weather } = useLoaderData();
-  const navigate = useNavigate();
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      console.log("halo?");
-      navigate(0);
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  // console.log("dane dla weather Root: ", weather);
+  const formatedDate = convertedDate(weather.current.dt);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     console.log("halo?");
+  //     navigate(0);
+  //   };
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
   return (
     <div>
       <div id="weather">
@@ -50,13 +54,20 @@ export default function WeatherRoot() {
             </Form>
           </div>
         </div>
-        <div>
+        <h3>{formatedDate}</h3>
+        <div id="linki-pogodowe">
           {/* <Link to={`/weathers/${weather.id}/current`}>Current</Link>
         <Link to={`/weathers/${weather.id}/hourly`}>Hourly</Link>
         <Link to={`/weathers/${weather.id}/daily`}>Daily</Link> */}
-          <Link to={`/weathers/${weather.id}/current`}>Current</Link>
-          <Link to={`/weathers/${weather.id}/hourly`}>Hourly</Link>
-          <Link to={`/weathers/${weather.id}/daily`}>Daily</Link>
+          <p>
+            <Link to={`/weathers/${weather.id}/current`}>Current</Link>
+          </p>
+          <p>
+            <Link to={`/weathers/${weather.id}/hourly`}>Hourly</Link>
+          </p>
+          <p>
+            <Link to={`/weathers/${weather.id}/daily`}>Daily</Link>
+          </p>
         </div>
       </div>
       <div id="weather-template">

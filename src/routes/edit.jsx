@@ -42,9 +42,9 @@ export default function EditWeatherRoot() {
           />
           <input
             type="text"
-            name="lng"
+            name="lon"
             placeholder="szerokosc"
-            defaultValue={weather.lng}
+            defaultValue={weather.lon}
           />
         </label>
         <p>

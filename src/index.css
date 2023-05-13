@@ -187,8 +187,15 @@ form[action$="delete"] button {
 }
 
 #sidebar nav a span {
-  float: right;
-  color: #eeb004;
+  font-size: 1em;
+  /* float: right; */
+  color: #6e6e6d;
+}
+/* #sidebar nad a span::after{
+  content: ;
+} */
+#sidebar nav a span:hover {
+  cursor: default;
 }
 #sidebar nav a.active span {
   color: inherit;
@@ -208,9 +215,26 @@ i {
 }
 
 #sidebar li {
+  display: flex;
   margin: 0.25rem 0;
 }
-
+#sidebar li a {
+  width: 100%;
+  margin-right: auto;
+}
+/* #sidebar .setting:after {
+  content: "\2807";
+  color: #818181;
+  font-size: 21px;
+} */
+div.setting {
+  display: flex;
+  align-items: center;
+}
+/* #sidebar .setting:hover {
+  cursor: default;
+  background-color: #3992ff;
+} */
 #sidebar nav a {
   display: flex;
   align-items: center;
@@ -219,7 +243,7 @@ i {
 
   white-space: pre;
   padding: 0.5rem;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   color: inherit;
   text-decoration: none;
   gap: 1rem;
@@ -394,12 +418,16 @@ i {
   justify-content: center;
   /* align-items: center; */
   gap: 0.5rem;
-  padding-top: 1rem;
+  /* height: 15rem; */
+  /* padding-top: 1rem; */
   padding-bottom: 2rem;
   border-bottom: 2px solid #e3e3e3;
 }
 #weather h1 {
   font-size: 3em;
+}
+#weather div:first-child {
+  height: 5em;
 }
 #weather > * {
   display: flex;
@@ -416,14 +444,26 @@ i {
   color: inherit;
   text-decoration: none;
 }
+#weather div:first-child + h3 {
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+}
+#linki-pogodowe {
+  height: auto;
+}
 #weather a:hover {
+  /* display: block; */
   transform: scale(1.05);
   color: #818181;
+  background-color: white;
 }
 #weather-template {
   display: flex;
+  flex: 1;
   flex-direction: column;
   justify-content: center;
+  overflow: auto;
+  /* max-height: 22rem; */
   /* border-bottom: 2px solid #e3e3e3; */
 }
 .w-table {

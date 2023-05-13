@@ -16,6 +16,7 @@ export async function action() {
   return redirect(`weathers/${weather.id}/edit`);
 }
 export async function loader({ request }) {
+  // console.log("update root");
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const weathers = await getWeathers(q);
@@ -24,12 +25,12 @@ export async function loader({ request }) {
 }
 export default function Root() {
   const { weathers, q } = useLoaderData();
+  // console.log("pogoda All", weathers);
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
-  //   console.log("moje dane: ", weathers);
   useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
@@ -73,9 +74,12 @@ export default function Root() {
                     }
                   >
                     {weather.city ? <>{weather.city}</> : <i>No City</i>}
-                    {/* {" "}
-                    {weather.favorite && <span>★</span>} */}
+                    {}
+                    <span>...</span>
                   </NavLink>
+                  {/* <div className="setting">
+                    <a>&#8230;</a>
+                  </div> */}
                 </li>
               ))}
             </ul>
