@@ -1,5 +1,5 @@
 function convertedDate(time) {
-  //   console.log("time:", time);
+  let unixTime = 0;
   const daysOfWeek = [
     "Niedziela",
     "Poniedziałek",
@@ -9,16 +9,18 @@ function convertedDate(time) {
     "Piątek",
     "Sobota",
   ];
-  //konwertowanie czasu
-  const unixTime = new Date(time * 1000);
-  //   console.log("czasUnix", unixTime);
-  //data
-  const dayOfWeek = daysOfWeek[unixTime.getDay()];
-  const dayOfMonth = unixTime.getDate();
-  const month = unixTime.getMonth() + 1;
-  const year = unixTime.getFullYear();
-  const formattedDate = `${dayOfWeek}, ${dayOfMonth}/${month}/${year}`;
+  time ? (unixTime = new Date(time * 1000)) : (unixTime = new Date());
+  console.log("data", unixTime);
+  const utcDayOfWeek = daysOfWeek[unixTime.getUTCDay()];
+  const utcDayOfMonth = unixTime.getUTCDate();
+  const utcMonth = unixTime.getUTCMonth() + 1;
+  const utcYear = unixTime.getUTCFullYear();
+  const formattedDate = `${utcDayOfWeek}, ${utcDayOfMonth}/${utcMonth}/${utcYear}`;
   return formattedDate;
 }
-
-export { convertedDate };
+function convertWindDegreeToDirection(degree) {
+  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const index = Math.round((degree % 360) / 45) % 8;
+  return directions[index];
+}
+export { convertedDate, convertWindDegreeToDirection };

@@ -8,68 +8,48 @@ import {
 import { getWeather } from "../APIs/dataAPI";
 import { useEffect } from "react";
 import { convertedDate } from "../APIs/functions";
+import CurrentWeather from "./currentWeather";
 export async function loader({ params }) {
   // console.log("wwykonuje loader dla Roota: ");
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
   return { weather };
 }
-
 export default function WeatherRoot() {
   const { weather } = useLoaderData();
-  // console.log("dane dla weather Root: ", weather);
-  const formatedDate = convertedDate(weather.current.dt);
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   const handleBeforeUnload = () => {
-  //     console.log("halo?");
-  //     navigate(0);
-  //   };
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // }, []);
+  const date = weather?.current?.dt
+    ? convertedDate(weather.current.dt + weather.timezone_offset)
+    : convertedDate(null);
   return (
     <div>
-      <div id="weather">
-        <div>
-          <h1>{weather.city || `Miasto ${weather.id}`}</h1>
+      {weather ? (
+        <div id="weather">
           <div>
-            <Form action="edit">
-              <button type="submit">Edit</button>
-            </Form>
-            <Form
-              method="post"
-              action="delete"
-              onSubmit={(event) => {
-                if (
-                  !confirm("Please confirm you want to delete this record.")
-                ) {
-                  event.preventDefault();
-                }
-              }}
-            >
-              <button type="submit">Delete</button>
-            </Form>
+            <Link to={`edit`}>
+              <h3>{weather.city || `Miasto ${weather.id}`}</h3>
+            </Link>
+            <h4>{date}</h4>
+          </div>
+          <div id="linki-pogodowe">
+            <p>
+              <Link to={`/weathers/${weather.id}` || "/"}>Current</Link>
+            </p>
+            <p>
+              <Link to={`/weathers/${weather.id}/hourly` || "/"}>Hourly</Link>
+            </p>
+            <p>
+              <Link to={`/weathers/${weather.id}/daily` || "/"}>Daily</Link>
+            </p>
           </div>
         </div>
-        <h3>{formatedDate}</h3>
-        <div id="linki-pogodowe">
-          {/* <Link to={`/weathers/${weather.id}/current`}>Current</Link>
-        <Link to={`/weathers/${weather.id}/hourly`}>Hourly</Link>
-        <Link to={`/weathers/${weather.id}/daily`}>Daily</Link> */}
-          <p>
-            <Link to={`/weathers/${weather.id}/current`}>Current</Link>
-          </p>
-          <p>
-            <Link to={`/weathers/${weather.id}/hourly`}>Hourly</Link>
-          </p>
-          <p>
-            <Link to={`/weathers/${weather.id}/daily`}>Daily</Link>
-          </p>
+      ) : (
+        <div className="edit-option">
+          <Form action="edit">
+            <p>add location first:</p>
+            <button type="submit">Edit</button>
+          </Form>
         </div>
-      </div>
+      )}
       <div id="weather-template">
         <Outlet />
       </div>

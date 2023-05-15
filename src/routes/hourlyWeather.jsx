@@ -1,73 +1,82 @@
 import { useLoaderData } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
+import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
 
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
-  const hourly = weather.hourly;
-  console.log("pokaz", hourly);
-  return { hourly };
+  return weather;
 }
 export default function HourlyWeather() {
-  const { hourly } = useLoaderData();
-  console.log(hourly);
-  function convertWindDegreeToDirection(degree) {
-    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    const index = Math.round((degree % 360) / 45) % 8;
-    return directions[index];
-  }
+  const { hourly, timezone_offset } = useLoaderData();
+  console.log("godzinowo", timezone_offset);
   return (
     <>
       {hourly &&
-        hourly.map((hour) => {
+        hourly.map((hour, index) => {
+          console.log("sprawdzam", new Date(hour.dt * 1000));
           return (
-            <div key={hour.dt} id="hourly" className="w-table">
-              <ul>
-                <li>{`${new Date(hour.dt * 1000).getHours()}:${new Date(
-                  hour.dt * 1000
+            <div key={hour.dt}>
+              {hourly[index - 1] !== undefined ? (
+                new Date((hour.dt + timezone_offset) * 1000).getUTCHours() ===
+                0 ? (
+                  <h3>
+                    {hour?.dt
+                      ? convertedDate(hour.dt + timezone_offset)
+                      : convertedDate(null)}
+                  </h3>
+                ) : (
+                  ""
                 )
-                  .getMinutes()
-                  .toString()
-                  .padStart(2, "0")}`}</li>
-                <li>
-                  {" "}
-                  <img
-                    src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
-                    alt={`${hour.weather[0].description}`}
-                  />
-                </li>
-                <li>{`${hour.temp}°C`}</li>
-              </ul>
-              <ul>
-                <li>Zachmurzenie</li>
-                <li>Wilgotnosc</li>
-                <li>Deszcz</li>
-              </ul>
-              <ul>
-                <li>{`${hour.clouds}%`}</li>
-                <li>{`${hour.humidity}%`}</li>
-                <li>{`${hour.pop}%`}</li>
-              </ul>
-              <ul>
-                <li>Ciśnienie</li>
-                <li>Prędkość wiatru</li>
-                <li>Podmuch wiatru</li>
-              </ul>
-              <ul>
-                <li>{`${hour.pressure}hPa`}</li>
-                <li>{`${hour.wind_speed}m/s`}</li>
-                <li>{`${hour.wind_gust}m/s`}</li>
-              </ul>
-              <ul>
-                <li>Kierunek wiatru</li>
-                <li>Indeks UV</li>
-                <li>Widoczność</li>
-              </ul>
-              <ul>
-                <li>{convertWindDegreeToDirection(hour.wind_deg)}</li>
-                <li>{`${hour.uvi} UVI`}</li>
-                <li>{`${hour.visibility / 1000}km`}</li>
-              </ul>
+              ) : (
+                ""
+              )}
+              <div id="hourly" className="w-table">
+                <ul>
+                  <li>{`${new Date((hour.dt + timezone_offset) * 1000)
+                    .getUTCHours()
+                    .toString()
+                    .padStart(2, "0")}:00`}</li>
+                  <li>
+                    {" "}
+                    <img
+                      src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
+                      alt={`${hour.weather[0].description}`}
+                    />
+                  </li>
+                  <li>{`${hour.temp}°C`}</li>
+                </ul>
+                <ul>
+                  <li>Zachmurzenie</li>
+                  <li>Wilgotnosc</li>
+                  <li>Deszcz</li>
+                </ul>
+                <ul>
+                  <li>{`${hour.clouds}%`}</li>
+                  <li>{`${hour.humidity}%`}</li>
+                  <li>{`${hour.pop}%`}</li>
+                </ul>
+                <ul>
+                  <li>Ciśnienie</li>
+                  <li>Prędkość wiatru</li>
+                  <li>Podmuch wiatru</li>
+                </ul>
+                <ul>
+                  <li>{`${hour.pressure}hPa`}</li>
+                  <li>{`${hour.wind_speed}m/s`}</li>
+                  <li>{`${hour.wind_gust}m/s`}</li>
+                </ul>
+                <ul>
+                  <li>Kierunek wiatru</li>
+                  <li>Indeks UV</li>
+                  <li>Widoczność</li>
+                </ul>
+                <ul>
+                  <li>{convertWindDegreeToDirection(hour.wind_deg)}</li>
+                  <li>{`${hour.uvi} UVI`}</li>
+                  <li>{`${hour.visibility / 1000}km`}</li>
+                </ul>
+              </div>
             </div>
           );
         })}

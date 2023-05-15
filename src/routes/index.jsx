@@ -4,7 +4,6 @@ export default function Index() {
       <h1>MAPA</h1>
       <br />
       <br />
-      Tutaj bedzie Google Map
     </div>
   );
 }

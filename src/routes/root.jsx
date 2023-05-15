@@ -8,12 +8,24 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import { getWeathers, createWeather } from "../APIs/dataAPI";
+import { getWeathers, createWeather, deleteWeather } from "../APIs/dataAPI";
 import { useEffect } from "react";
-
-export async function action() {
-  const weather = await createWeather();
-  return redirect(`weathers/${weather.id}/edit`);
+import DropDownMenu from "../components/dropDownMenu";
+//images
+export async function action({ request }) {
+  const formData = await request.formData();
+  let intent = formData.get("intent");
+  // console.log(intent);
+  // console.log("intent: ", intent);
+  if (intent === "add") {
+    const weather = await createWeather();
+    return redirect(`weathers/${weather.id}/edit`);
+  }
+  if (intent === "delete") {
+    //   await deleteWeather(params.weatherId);
+    // return redirect("/");
+    // console.log("url: ", url);
+  }
 }
 export async function loader({ request }) {
   // console.log("update root");
@@ -59,7 +71,9 @@ export default function Root() {
             <div className="sr-only" aria-live="polite"></div>
           </Form>
           <Form method="post">
-            <button type="submit">New</button>
+            <button type="submit" name="intent" value="add">
+              New
+            </button>
           </Form>
         </div>
         <nav>
@@ -68,15 +82,15 @@ export default function Root() {
               {weathers.map((weather) => (
                 <li key={weather.id}>
                   <NavLink
-                    to={`weathers/${weather.id}/current`}
+                    to={`weathers/${weather.id}`}
                     className={({ isActive, isPending }) =>
-                      isActive ? "active" : isPending ? "pending" : ""
+                      isActive ? " active" : isPending ? " pending" : ""
                     }
                   >
                     {weather.city ? <>{weather.city}</> : <i>No City</i>}
                     {}
-                    <span>...</span>
                   </NavLink>
+                  <DropDownMenu id={weather.id} />
                   {/* <div className="setting">
                     <a>&#8230;</a>
                   </div> */}

@@ -1,34 +1,27 @@
 import { useLoaderData } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
+import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
 
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
-  const daily = weather.daily;
-  console.log("pokaz", daily);
-  return { daily };
+  console.log(weather);
+  return weather;
 }
 export default function DailyWeather() {
-  const { daily } = useLoaderData();
-  console.log(daily);
-  function convertWindDegreeToDirection(degree) {
-    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    const index = Math.round((degree % 360) / 45) % 8;
-    return directions[index];
-  }
+  const { daily, timezone_offset } = useLoaderData();
+
   return (
     <>
       {daily &&
         daily.map((day) => {
+          const date = day?.dt
+            ? convertedDate(day.dt + timezone_offset)
+            : convertedDate(null);
           return (
             <div key={day.dt} id="daily" className="w-table">
               <ul>
-                <li>{`${new Date(day.dt * 1000).getdays()}:${new Date(
-                  day.dt * 1000
-                )
-                  .getMinutes()
-                  .toString()
-                  .padStart(2, "0")}`}</li>
+                <li>{date}</li>
                 <li>
                   {" "}
                   <img

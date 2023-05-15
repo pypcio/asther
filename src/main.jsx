@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "../src/style/index.css";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -46,7 +46,8 @@ const router = createBrowserRouter(
           loader={weatherRootLoader}
         >
           <Route
-            path="/weathers/:weatherId/current"
+            index
+            // path="/weathers/:weatherId/current"
             element={<CurrentWeather />}
             loader={currentWeatherLoader}
           />

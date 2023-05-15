@@ -1,3 +1,6 @@
+:root {
+  --max-height-factor: 145px;
+}
 html {
   box-sizing: border-box;
 }
@@ -33,7 +36,7 @@ button {
   font-size: 1rem;
   font-family: inherit;
   border: none;
-  border-radius: 8px;
+  border-radius: 2px;
   padding: 0.5rem 0.75rem;
   box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
   background-color: white;
@@ -183,10 +186,13 @@ form[action$="delete"] button {
 #sidebar nav {
   flex: 1;
   overflow: auto;
+  /* overflow: visible;
+  overflow-y: scroll;  */
   padding-top: 1rem;
+  /* z-index: 1; */
 }
 
-#sidebar nav a span {
+#sidebar nav span {
   font-size: 1em;
   /* float: right; */
   color: #6e6e6d;
@@ -216,31 +222,35 @@ i {
 
 #sidebar li {
   display: flex;
+  align-items: center;
   margin: 0.25rem 0;
 }
 #sidebar li a {
   width: 100%;
   margin-right: auto;
 }
-/* #sidebar .setting:after {
-  content: "\2807";
-  color: #818181;
-  font-size: 21px;
-} */
-div.setting {
+/* #sidebar .menu-container {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
-/* #sidebar .setting:hover {
-  cursor: default;
-  background-color: #3992ff;
+#sidebar .menu-trigger {
+  overflow: hidden;
+  cursor: pointer;
+}
+#sidebar .dropdown-menu {
+  position: relative;
+  top: 50px;
+  right: 20px;
+  background-color: #c8c8c8;
+  padding: 10px 20px;
+  width: 50px;
 } */
 #sidebar nav a {
   display: flex;
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
-
   white-space: pre;
   padding: 0.5rem;
   /* border-radius: 8px; */
@@ -248,7 +258,6 @@ div.setting {
   text-decoration: none;
   gap: 1rem;
 }
-
 #sidebar nav a:hover {
   background: #e3e3e3;
 }
@@ -264,8 +273,9 @@ div.setting {
 
 #detail {
   flex: 1;
-  padding: 1.5rem 2rem;
+  padding: 1rem 2rem;
   width: 100%;
+  /* overflow: auto; */
 }
 #edit-form {
   margin-top: 4rem;
@@ -416,19 +426,19 @@ div.setting {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
-  gap: 0.5rem;
-  /* height: 15rem; */
-  /* padding-top: 1rem; */
-  padding-bottom: 2rem;
   border-bottom: 2px solid #e3e3e3;
 }
-#weather h1 {
+/* #weather h1 {
   font-size: 3em;
+} */
+#weather > :first-child {
+  /* color: #12073b; */
+  opacity: 0.8;
+  display: flex;
+  justify-content: space-between;
+  margin-right: 1rem;
 }
-#weather div:first-child {
-  height: 5em;
-}
+
 #weather > * {
   display: flex;
   align-items: center;
@@ -454,22 +464,39 @@ div.setting {
 #weather a:hover {
   /* display: block; */
   transform: scale(1.05);
-  color: #818181;
+  filter: brightness(1.1);
   background-color: white;
+}
+#weather div > a:hover {
+  color: #121212;
+  transform: none;
 }
 #weather-template {
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
+  max-height: calc(var(--max-height-factor) * 4);
   overflow: auto;
-  /* max-height: 22rem; */
+  /* max-height: ; */
   /* border-bottom: 2px solid #e3e3e3; */
+}
+.edit-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2rem;
+}
+.edit-option form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .w-table {
   display: flex;
   justify-content: center;
-  border-bottom: 2px solid #e3e3e3;
+  /* border-bottom: 2px solid #e3e3e3; */
 }
 .w-table > * {
   list-style: none;
@@ -477,9 +504,10 @@ div.setting {
 .w-table ul:first-child {
   display: flex;
   align-items: center;
-  font-size: 2rem;
-  margin-left: auto;
-  margin-right: auto;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  margin-right: 2rem;
 }
 .w-table ul:last-child {
   margin-right: 40px;
@@ -488,19 +516,36 @@ div.setting {
   padding: 5px;
 }
 .w-table ul {
-  padding: 10px 10px 10px 10px;
+  padding: 5px 10px 5px 10px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  margin-left: auto;
 }
 
 .w-table ul:not(:first-child) {
   display: flex;
+  font-size: 0.9rem;
   flex-direction: column;
   justify-content: center;
 }
 .w-table ul:nth-child(2n) {
-  font-weight: bold;
+  font-weight: 600;
 }
 #hourly ul {
   padding: 5px 10px 5px 10px;
-  margin-top: 5px;
+  margin-top: 0px;
   margin-bottom: 5px;
+  margin-left: auto;
+}
+#hourly ul:first-child {
+  margin-left: 1rem;
+  margin-right: auto;
+}
+#hourly ul:first-child li:first-child {
+  width: 70px;
+}
+#weather-template h3 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 2rem;
 }

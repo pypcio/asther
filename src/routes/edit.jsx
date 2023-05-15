@@ -7,7 +7,7 @@ export async function action({ request, params }) {
   const update = Object.fromEntries(formData);
   await updateWeather(params.weatherId, update);
   //   console.log("szybki update: ", update);
-  return redirect(`/weathers/${params.weatherId}/current`);
+  return redirect(`/weathers/${params.weatherId}`);
 }
 export async function loader({ params }) {
   const weather = await getWeather(params.weatherId);
