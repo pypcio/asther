@@ -1,6 +1,7 @@
 import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
-import { updateWeather } from "../APIs/dataAPI";
+import { getWeather, updateWeather } from "../APIs/dataAPI";
 // import { useWeatherApi } from "../APIs/weatherAPI";
+
 export async function action({ request, params }) {
   const formData = await request.formData();
   const update = Object.fromEntries(formData);
@@ -8,9 +9,13 @@ export async function action({ request, params }) {
   //   console.log("szybki update: ", update);
   return redirect(`/weathers/${params.weatherId}`);
 }
+export async function loader({ params }) {
+  const weather = await getWeather(params.weatherId);
+  return { weather };
+}
 export default function EditWeatherRoot() {
   const { weather } = useLoaderData();
-  console.log("wywoluje id: ", weather.id);
+  //   console.log("wywoluje id: ", weather.id);
   const navigate = useNavigate();
   return (
     <div id="edit-form">
@@ -37,9 +42,9 @@ export default function EditWeatherRoot() {
           />
           <input
             type="text"
-            name="lng"
+            name="lon"
             placeholder="szerokosc"
-            defaultValue={weather.lng}
+            defaultValue={weather.lon}
           />
         </label>
         <p>

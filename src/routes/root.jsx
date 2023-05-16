@@ -8,34 +8,58 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import { getWeathers, createWeather } from "../APIs/dataAPI";
+import { getWeathers, createWeather, deleteWeather } from "../APIs/dataAPI";
 import { useEffect } from "react";
-
-export async function action() {
-  const weather = await createWeather();
-  return redirect(`weathers/${weather.id}/edit`);
+import DropDownMenu from "../components/dropDownMenu";
+import { AiFillGithub } from "react-icons/ai";
+//images
+// import astherLogo from "../assets/logo-weather-app-1-2.svg";
+import astherLogo from "../assets/logo-5.svg";
+// import astherLogo from "../assets/logo-6.svg";
+// import astherLogo from "../assets/logo-2.svg";
+export async function action({ request }) {
+  const formData = await request.formData();
+  let intent = formData.get("intent");
+  // console.log(intent);
+  // console.log("intent: ", intent);
+  if (intent === "add") {
+    const weather = await createWeather();
+    return redirect(`weathers/${weather.id}/edit`);
+  }
+  if (intent === "delete") {
+    //dziala? xd
+  }
 }
 export async function loader({ request }) {
+  // console.log("update root");
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const weathers = await getWeathers(q);
+  // console.log("dane? ", weathers);
   return { weathers, q };
 }
 export default function Root() {
   const { weathers, q } = useLoaderData();
+  // console.log("pogoda All", weathers);
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
-  //   console.log("moje dane: ", weathers);
   useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
   return (
     <>
       <div id="sidebar">
-        <h1>React Router Weather</h1>
+        <p id="logo">
+          {/* <Link>
+            <AiFillGithub />
+          </Link> */}
+          <img src={astherLogo} className="logo" alt="Asther logo" />
+          <p>Asther</p>
+        </p>
+        {/* <h1>Asther</h1> */}
         <div>
           <Form id="search-form" role="search">
             <input
@@ -57,7 +81,9 @@ export default function Root() {
             <div className="sr-only" aria-live="polite"></div>
           </Form>
           <Form method="post">
-            <button type="submit">New</button>
+            <button type="submit" name="intent" value="add">
+              New
+            </button>
           </Form>
         </div>
         <nav>
@@ -66,21 +92,24 @@ export default function Root() {
               {weathers.map((weather) => (
                 <li key={weather.id}>
                   <NavLink
-                    to={`weathers/${weather.id}/current`}
+                    to={`weathers/${weather.id}`}
                     className={({ isActive, isPending }) =>
-                      isActive ? "active" : isPending ? "pending" : ""
+                      isActive ? " active" : isPending ? " pending" : ""
                     }
                   >
                     {weather.city ? <>{weather.city}</> : <i>No City</i>}
-                    {/* {" "}
-                    {weather.favorite && <span>★</span>} */}
+                    {}
                   </NavLink>
+                  <DropDownMenu id={weather.id} />
+                  {/* <div className="setting">
+                    <a>&#8230;</a>
+                  </div> */}
                 </li>
               ))}
             </ul>
           ) : (
             <p>
-              <i>No weathers</i>
+              <i>No locations added</i>
             </p>
           )}
         </nav>

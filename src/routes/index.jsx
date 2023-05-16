@@ -1,10 +1,10 @@
+import astherLogo from "../assets/logo-5.svg";
 export default function Index() {
   return (
     <div id="zero-state">
-      <h1>MAPA</h1>
-      <br />
-      <br />
-      Tutaj bedzie Google Map
+      <h1>Asther</h1>
+      <p>Your Personal Weather Diary</p>
+      <img src={astherLogo} className="logo" alt="Asther logo" />
     </div>
   );
 }

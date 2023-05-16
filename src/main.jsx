@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "../src/style/index.css";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -13,11 +13,18 @@ import Root, {
 } from "./routes/root.jsx";
 import ErrorPage from "./routes/errorPage";
 import WeatherRoot, { loader as weatherRootLoader } from "./routes/weatherRoot";
-import CurrentWeather from "./routes/currentWeather";
-import HourlyWeather from "./routes/hourlyWeather";
-import DailyWeather from "./routes/dailyWeather";
+import CurrentWeather, {
+  loader as currentWeatherLoader,
+} from "./routes/currentWeather";
+import HourlyWeather, {
+  loader as hourlyWeatherLoader,
+} from "./routes/hourlyWeather";
+import DailyWeather, {
+  loader as dailyWeatherLoader,
+} from "./routes/dailyWeather";
 import EditWeatherRoot, {
   action as editWeatherRootAction,
+  loader as editWeatherLoader,
 } from "./routes/edit";
 import { action as deleteAction } from "./routes/delete";
 import Index from "./routes";
@@ -39,19 +46,26 @@ const router = createBrowserRouter(
           loader={weatherRootLoader}
         >
           <Route
-            path="/weathers/:weatherId/current"
+            index
+            // path="/weathers/:weatherId/current"
             element={<CurrentWeather />}
+            loader={currentWeatherLoader}
           />
           <Route
             path="/weathers/:weatherId/hourly"
             element={<HourlyWeather />}
+            loader={hourlyWeatherLoader}
           />
-          <Route path="/weathers/:weatherId/daily" element={<DailyWeather />} />
+          <Route
+            path="/weathers/:weatherId/daily"
+            element={<DailyWeather />}
+            loader={dailyWeatherLoader}
+          />
         </Route>
         <Route
           path="/weathers/:weatherId/edit"
           element={<EditWeatherRoot />}
-          loader={weatherRootLoader}
+          loader={editWeatherLoader}
           action={editWeatherRootAction}
         />
         <Route
