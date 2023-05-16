@@ -10,7 +10,7 @@ function convertedDate(time) {
     "Sobota",
   ];
   time ? (unixTime = new Date(time * 1000)) : (unixTime = new Date());
-  console.log("data", unixTime);
+  // console.log("data", unixTime);
   const utcDayOfWeek = daysOfWeek[unixTime.getUTCDay()];
   const utcDayOfMonth = unixTime.getUTCDate();
   const utcMonth = unixTime.getUTCMonth() + 1;

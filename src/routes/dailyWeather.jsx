@@ -1,25 +1,29 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigation } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
 
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
   const weather = await getWeather(params.weatherId);
-  console.log(weather);
+  // console.log(weather);
   return weather;
 }
 export default function DailyWeather() {
   const { daily, timezone_offset } = useLoaderData();
-
+  const navigation = useNavigation();
+  console.log(daily);
+  // console.log("location: ", navigation.location);
+  // console.log("state: ", navigation.state);
   return (
     <>
       {daily &&
         daily.map((day) => {
+          console.log("each day: ", day.temp);
           const date = day?.dt
             ? convertedDate(day.dt + timezone_offset)
             : convertedDate(null);
           return (
-            <div key={day.dt} id="daily" className="w-table">
+            <div key={day.dt} className="w-table hourly daily">
               <ul>
                 <li>{date}</li>
                 <li>
@@ -29,7 +33,7 @@ export default function DailyWeather() {
                     alt={`${day.weather[0].description}`}
                   />
                 </li>
-                <li>{`${day.temp}°C`}</li>
+                <li>{`${day.temp.day || "- "}°C`}</li>
               </ul>
               <ul>
                 <li>Zachmurzenie</li>
@@ -37,9 +41,9 @@ export default function DailyWeather() {
                 <li>Deszcz</li>
               </ul>
               <ul>
-                <li>{`${day.clouds}%`}</li>
-                <li>{`${day.humidity}%`}</li>
-                <li>{`${day.pop}%`}</li>
+                <li>{`${day.clouds || "0 "}%`}</li>
+                <li>{`${day.humidity || "0 "}%`}</li>
+                <li>{`${day.pop * 100 || "0 "}%`}</li>
               </ul>
               <ul>
                 <li>Ciśnienie</li>
@@ -47,19 +51,19 @@ export default function DailyWeather() {
                 <li>Podmuch wiatru</li>
               </ul>
               <ul>
-                <li>{`${day.pressure}hPa`}</li>
-                <li>{`${day.wind_speed}m/s`}</li>
-                <li>{`${day.wind_gust}m/s`}</li>
+                <li>{`${day.pressure || "- "}hPa`}</li>
+                <li>{`${day.wind_speed || "0 "}m/s`}</li>
+                <li>{`${day.wind_gust || "0 "}m/s`}</li>
               </ul>
               <ul>
                 <li>Kierunek wiatru</li>
                 <li>Indeks UV</li>
-                <li>Widoczność</li>
+                <li>Opady</li>
               </ul>
               <ul>
-                <li>{convertWindDegreeToDirection(day.wind_deg)}</li>
-                <li>{`${day.uvi} UVI`}</li>
-                <li>{`${day.visibility / 1000}km`}</li>
+                <li>{convertWindDegreeToDirection(day.wind_deg) || "- "}</li>
+                <li>{`${day.uvi || "- "}UVI`}</li>
+                <li>{`${day.rain || "0 "}mm`}</li>
               </ul>
             </div>
           );

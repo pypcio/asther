@@ -9,12 +9,11 @@ export async function loader({ params }) {
 }
 export default function HourlyWeather() {
   const { hourly, timezone_offset } = useLoaderData();
-  console.log("godzinowo", timezone_offset);
   return (
     <>
       {hourly &&
         hourly.map((hour, index) => {
-          console.log("sprawdzam", new Date(hour.dt * 1000));
+          // console.log("sprawdzam", new Date(hour.dt * 1000));
           return (
             <div key={hour.dt}>
               {hourly[index - 1] !== undefined ? (
@@ -31,7 +30,7 @@ export default function HourlyWeather() {
               ) : (
                 ""
               )}
-              <div id="hourly" className="w-table">
+              <div className="w-table hourly">
                 <ul>
                   <li>{`${new Date((hour.dt + timezone_offset) * 1000)
                     .getUTCHours()
@@ -54,7 +53,7 @@ export default function HourlyWeather() {
                 <ul>
                   <li>{`${hour.clouds}%`}</li>
                   <li>{`${hour.humidity}%`}</li>
-                  <li>{`${hour.pop}%`}</li>
+                  <li>{`${Math.round(hour.pop * 100)}%`}</li>
                 </ul>
                 <ul>
                   <li>Ciśnienie</li>

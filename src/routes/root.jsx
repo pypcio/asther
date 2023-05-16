@@ -11,7 +11,12 @@ import {
 import { getWeathers, createWeather, deleteWeather } from "../APIs/dataAPI";
 import { useEffect } from "react";
 import DropDownMenu from "../components/dropDownMenu";
+import { AiFillGithub } from "react-icons/ai";
 //images
+// import astherLogo from "../assets/logo-weather-app-1-2.svg";
+import astherLogo from "../assets/logo-5.svg";
+// import astherLogo from "../assets/logo-6.svg";
+// import astherLogo from "../assets/logo-2.svg";
 export async function action({ request }) {
   const formData = await request.formData();
   let intent = formData.get("intent");
@@ -22,9 +27,7 @@ export async function action({ request }) {
     return redirect(`weathers/${weather.id}/edit`);
   }
   if (intent === "delete") {
-    //   await deleteWeather(params.weatherId);
-    // return redirect("/");
-    // console.log("url: ", url);
+    //dziala? xd
   }
 }
 export async function loader({ request }) {
@@ -49,7 +52,14 @@ export default function Root() {
   return (
     <>
       <div id="sidebar">
-        <h1>React Router Weather</h1>
+        <p id="logo">
+          {/* <Link>
+            <AiFillGithub />
+          </Link> */}
+          <img src={astherLogo} className="logo" alt="Asther logo" />
+          <p>Asther</p>
+        </p>
+        {/* <h1>Asther</h1> */}
         <div>
           <Form id="search-form" role="search">
             <input
@@ -99,7 +109,7 @@ export default function Root() {
             </ul>
           ) : (
             <p>
-              <i>No weathers</i>
+              <i>No locations added</i>
             </p>
           )}
         </nav>

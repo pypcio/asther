@@ -21,7 +21,7 @@ export default function WeatherRoot() {
     ? convertedDate(weather.current.dt + weather.timezone_offset)
     : convertedDate(null);
   return (
-    <div>
+    <>
       {weather ? (
         <div id="weather">
           <div>
@@ -50,9 +50,9 @@ export default function WeatherRoot() {
           </Form>
         </div>
       )}
-      <div id="weather-template">
+      <nav id="weather-template">
         <Outlet />
-      </div>
-    </div>
+      </nav>
+    </>
   );
 }

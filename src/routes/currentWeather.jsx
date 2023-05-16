@@ -12,8 +12,6 @@ export async function loader({ params }) {
 }
 export default function CurrentWeather() {
   const { current, timezone_offset } = useLoaderData();
-  const weather = useLoaderData();
-  console.log("teraz: ", timezone_offset);
   // console.log("pokaz status strony", navigation.state);
   return (
     <div>
