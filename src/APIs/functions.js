@@ -23,4 +23,70 @@ function convertWindDegreeToDirection(degree) {
   const index = Math.round((degree % 360) / 45) % 8;
   return directions[index];
 }
-export { convertedDate, convertWindDegreeToDirection };
+function isValidLatitude(input) {
+  // Remove any leading or trailing whitespace
+  // console.log("typ", typeof input);
+  if (!input) {
+    return false;
+  }
+  input = input.trim();
+
+  // Replace any comma (",") with a dot (".") for consistency
+  input = input.replace(",", ".");
+
+  // Check if the input is a number within the valid latitude range (-90 to 90)
+  const latitude = parseFloat(input);
+  if (isNaN(latitude) || latitude < -90 || latitude > 90) {
+    return false;
+  }
+
+  // Check if the input has valid formatting
+  const regex = /^[-+]?\d+(\.\d+)?$/; // Allows for positive/negative numbers with or without decimals
+  if (!regex.test(input)) {
+    return false;
+  }
+
+  return true;
+}
+function isValidLongitude(input) {
+  // Remove any leading or trailing whitespace
+  if (!input) {
+    return false;
+  }
+  input = input.trim();
+
+  // Replace any comma (",") with a dot (".") for consistency
+  input = input.replace(",", ".");
+
+  // Check if the input is a number within the valid longitude range (-180 to 180)
+  const longitude = parseFloat(input);
+  if (isNaN(longitude) || longitude < -180 || longitude > 180) {
+    return false;
+  }
+
+  // Check if the input has valid formatting
+  const regex = /^[-+]?\d+(\.\d+)?$/; // Allows for positive/negative numbers with or without decimals
+  if (!regex.test(input)) {
+    return false;
+  }
+
+  return true;
+}
+function isValidCity(input) {
+  if (!input) {
+    return false;
+  }
+  input = input.trim();
+  const regex = /^[A-Z][a-zA-Z\s-]{2,29}$/;
+  if (!regex.test(input)) {
+    return false;
+  }
+  return true;
+}
+export {
+  convertedDate,
+  convertWindDegreeToDirection,
+  isValidLatitude,
+  isValidLongitude,
+  isValidCity,
+};

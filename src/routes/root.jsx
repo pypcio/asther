@@ -52,13 +52,13 @@ export default function Root() {
   return (
     <>
       <div id="sidebar">
-        <p id="logo">
+        <footer id="logo">
           {/* <Link>
             <AiFillGithub />
           </Link> */}
           <img src={astherLogo} className="logo" alt="Asther logo" />
-          <p>Asther</p>
-        </p>
+          <h4>Asther</h4>
+        </footer>
         {/* <h1>Asther</h1> */}
         <div>
           <Form id="search-form" role="search">

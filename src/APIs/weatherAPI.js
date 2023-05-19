@@ -23,7 +23,6 @@ export async function useWeatherApi(updates) {
     const result = await res.json();
     return result;
   } else {
-    // console.log("podaj lat i lon");
     return updates;
   }
 }
