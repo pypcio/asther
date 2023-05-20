@@ -43,7 +43,7 @@ export default function DailyWeather() {
               <ul>
                 <li>{`${day.clouds || "0 "}%`}</li>
                 <li>{`${day.humidity || "0 "}%`}</li>
-                <li>{`${day.pop * 100 || "0 "}%`}</li>
+                <li>{`${Math.round(day.pop * 100) || "0 "}%`}</li>
               </ul>
               <ul>
                 <li>Ciśnienie</li>

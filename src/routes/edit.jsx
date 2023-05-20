@@ -16,7 +16,8 @@ import { useEffect, useState, useRef } from "react";
 export async function action({ request, params }) {
   const formData = await request.formData();
   const update = Object.fromEntries(formData);
-  return { update };
+  await updateWeather(params.weatherId, update);
+  return redirect(`/weathers/${params.weatherId}`);
 }
 
 export async function loader({ params }) {
@@ -68,10 +69,9 @@ function EditWeatherRoot() {
   useEffect(() => {
     setErrMsg("");
   }, [city, lat, lon]);
-  const handleSubmit = () => {};
   return (
     <section id="edit-form">
-      <form id="data-form" onSubmit={handleSubmit}>
+      <Form method="post" id="data-form">
         <div>
           <label>Miejscowosc:</label>
           <p id="city">
@@ -98,115 +98,105 @@ function EditWeatherRoot() {
               <FontAwesomeIcon icon={faTimes} />
             </span>
           </p>
-
-          <p
-            id="uidnote"
-            className={
-              cityFocus && city && !validCity ? "instructions" : "offscreen"
-            }
-          >
-            <FontAwesomeIcon icon={faInfoCircle} />
-            3 to 30 characters. <br />
-            Must begin with capital letter <br />
-          </p>
         </div>
-
+        <p
+          id="uidnote"
+          className={
+            cityFocus && city && !validCity ? "instructions" : "offscreen"
+          }
+        >
+          <FontAwesomeIcon icon={faInfoCircle} />
+          3 to 30 characters. <br />
+          Best to begin with capital letter <br />
+        </p>
         <div id="wspolrzedne">
           <label>Wspolrzedne</label>
-          {/* <label htmlFor="lat">
-            Szerokosc
-            <span className={validLat ? "valid" : "hide"}>
-              <FontAwesomeIcon icon={faCheck} />
-            </span>
-            <span className={validLat || !lat ? "hide" : "invalid"}>
-              <FontAwesomeIcon icon={faTimes} />
-            </span>
-          </label> */}
           <div>
-            <p>
-              <input
-                ref={userRef}
-                placeholder="szerokość"
-                aria-label="lat"
-                type="text"
-                name="lat"
-                id="lat"
-                defaultValue={lat}
-                required
-                autoComplete="off"
-                onChange={(e) => setLat(e.target.value)}
-                aria-invalid={validLat ? "false" : "true"}
-                aria-describedby="uidnote"
-                onFocus={() => setLatFocus(true)}
-                onBlur={() => setLatFocus(false)}
-              />
-              <span className={validLat ? "valid" : "hide"}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validLat || !lat ? "hide" : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
-            </p>
-            <p
-              id="uidnote"
-              className={
-                latFocus && lat && !validLat ? "instructions" : "offscreen"
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Should be valid lattitude <br />
-              (between -90 to 90)
-              <br />
-            </p>
-            <p>
-              <input
-                placeholder="Długość"
-                type="text"
-                name="lon"
-                id="lon"
-                ref={userRef}
-                defaultValue={lon}
-                autoComplete="off"
-                required
-                onChange={(e) => setLon(e.target.value)}
-                aria-label="lon"
-                aria-invalid={validLon ? "false" : "true"}
-                aria-describedby="uidnote"
-                onFocus={() => setLonFocus(true)}
-                onBlur={() => setLonFocus(false)}
-              />
-              <span className={validLon ? "valid" : "hide"}>
-                <FontAwesomeIcon icon={faCheck} />
-              </span>
-              <span className={validLon || !lon ? "hide" : "invalid"}>
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
-            </p>
-            {/* <label htmlFor="lon">
-            Długość
-            <span className={validLon ? "valid" : "hide"}>
-              <FontAwesomeIcon icon={faCheck} />
-            </span>
-            <span className={validLon || !lon ? "hide" : "invalid"}>
-              <FontAwesomeIcon icon={faTimes} />
-            </span>
-          </label> */}
-            <p
-              id="uidnote"
-              className={
-                lonFocus && lon && !validLon ? "instructions" : "offscreen"
-              }
-            >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              Should be valid lattitude value <br />
-              (between -180 to 180)
-              <br />
-            </p>
+            <div className="data-location">
+              <p>
+                <input
+                  ref={userRef}
+                  placeholder="szerokość"
+                  aria-label="lat"
+                  type="text"
+                  name="lat"
+                  id="lat"
+                  defaultValue={lat}
+                  required
+                  autoComplete="off"
+                  onChange={(e) => setLat(e.target.value)}
+                  aria-invalid={validLat ? "false" : "true"}
+                  aria-describedby="uidnote"
+                  onFocus={() => setLatFocus(true)}
+                  onBlur={() => setLatFocus(false)}
+                />
+                <span className={validLat ? "valid" : "hide"}>
+                  <FontAwesomeIcon icon={faCheck} />
+                </span>
+                <span className={validLat || !lat ? "hide" : "invalid"}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </span>
+              </p>
+              <p
+                id="uidnote"
+                className={
+                  latFocus && lat && !validLat ? "instructions" : "offscreen"
+                }
+              >
+                <FontAwesomeIcon icon={faInfoCircle} />
+                Should be valid lattitude <br />
+                (between -90 to 90)
+                <br />
+              </p>
+            </div>
+            <div>
+              <p>
+                <input
+                  placeholder="Długość"
+                  type="text"
+                  name="lon"
+                  id="lon"
+                  ref={userRef}
+                  defaultValue={lon}
+                  autoComplete="off"
+                  required
+                  onChange={(e) => setLon(e.target.value)}
+                  aria-label="lon"
+                  aria-invalid={validLon ? "false" : "true"}
+                  aria-describedby="uidnote"
+                  onFocus={() => setLonFocus(true)}
+                  onBlur={() => setLonFocus(false)}
+                />
+                <span className={validLon ? "valid" : "hide"}>
+                  <FontAwesomeIcon icon={faCheck} />
+                </span>
+                <span className={validLon || !lon ? "hide" : "invalid"}>
+                  <FontAwesomeIcon icon={faTimes} />
+                </span>
+              </p>
+
+              <p
+                id="uidnote"
+                className={
+                  lonFocus && lon && !validLon ? "instructions" : "offscreen"
+                }
+              >
+                <FontAwesomeIcon icon={faInfoCircle} />
+                Should be valid lattitude value <br />
+                (between -180 to 180)
+                <br />
+              </p>
+            </div>
           </div>
         </div>
 
         <p>
-          <button type="submit">Save</button>
+          <button
+            disabled={!validCity || !validLat || !validLon ? true : false}
+            type="submit"
+          >
+            Save
+          </button>
           <button
             className="cancel"
             type="button"
@@ -217,7 +207,7 @@ function EditWeatherRoot() {
             Cancel
           </button>
         </p>
-      </form>
+      </Form>
     </section>
   );
 }

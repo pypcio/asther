@@ -46,8 +46,14 @@ button {
 button {
   color: #3992ff;
   font-weight: 500;
+  cursor: pointer;
 }
-
+button[disabled] {
+  /* CSS rules for disabled buttons */
+  opacity: 0.5;
+  cursor: default;
+  /* ... */
+}
 textarea:hover,
 input:hover,
 button:hover {
@@ -358,8 +364,11 @@ button {
 #data-form #wspolrzedne div {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   /* gap: 0.5rem; */
+}
+#data-form #wspolrzedne label {
+  padding-top: 16px;
 }
 /* #data-form #wspolrzedne div p {
   flex-grow: 2;
@@ -368,12 +377,17 @@ button {
   margin-left: 0;
   margin-right: 0;
 } */
+#data-form #wspolrzedne div div {
+  flex-direction: column;
+  align-items: normal;
+  flex-grow: 1;
+}
 #data-form #wspolrzedne p:nth-child(3n) {
   margin-left: 0;
 }
 #data-form #wspolrzedne p:nth-child(2n + 1),
 #data-form #wspolrzedne p:nth-child(2n + 1) input {
-  flex-grow: 2;
+  flex-grow: 1;
 }
 #data-form #wspolrzedne > *:not(label) {
   flex-grow: 1;
@@ -392,14 +406,18 @@ button {
 #edit-form .instructions {
   font-size: 0.75rem;
   border-radius: 0.5rem;
-  background: #000;
+  background: #5e5e5e;
   color: #fff;
   padding: 0.25rem;
-  position: relative;
+  /* position: relative; */
+  margin: 0 1rem 0 8rem;
   bottom: -10px;
 }
+#wspolrzedne .instructions {
+  margin: 0 1rem 0 0;
+}
 #edit-form .instructions > svg {
-  margin-right: 0.25rem;
+  margin-right: 0.5rem;
 }
 #edit-form .offscreen {
   position: absolute;
@@ -436,7 +454,6 @@ button {
   transition: opacity 200ms;
   transition-delay: 200ms;
 }
-
 #contact {
   max-width: 40rem;
   display: flex;
@@ -623,6 +640,11 @@ button {
 #weather a {
   color: inherit;
   text-decoration: none;
+  padding: 0.5rem;
+}
+#weather a.active {
+  background: hsl(224, 98%, 58%);
+  color: white;
 }
 #weather div:first-child + h3 {
   margin-left: 2rem;
@@ -634,8 +656,8 @@ button {
 #weather a:hover {
   /* display: block; */
   transform: scale(1.1);
-  filter: brightness(1.1);
-  background-color: inherit;
+  /* filter: brightness(1.1);
+  background-color: inherit; */
 }
 #weather div > a:hover {
   color: #121212;

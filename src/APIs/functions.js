@@ -72,15 +72,28 @@ function isValidLongitude(input) {
 
   return true;
 }
+// function isValidCity(input) {
+//   if (!input) {
+//     return false;
+//   }
+//   input = input.trim();
+//   const regex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż\s-]{2,29}$/;
+//   if (!regex.test(input)) {
+//     return false;
+//   }
+//   return true;
+// }
 function isValidCity(input) {
   if (!input) {
     return false;
   }
+
   input = input.trim();
-  const regex = /^[A-Z][a-zA-Z\s-]{2,29}$/;
-  if (!regex.test(input)) {
+
+  if (input.length < 3) {
     return false;
   }
+
   return true;
 }
 export {
