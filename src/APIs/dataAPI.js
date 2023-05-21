@@ -19,7 +19,7 @@ export async function getWeathers(query) {
   let allData = await Promise.all(fetchData);
   // console.log(allData);
   if (query) {
-    allData = matchSorter(allData, query, { keys: ["city", "createdAt"] });
+    allData = matchSorter(allData, query, { keys: ["city", "id"] });
   }
   return allData.sort(sortBy("city", "createdAt"));
 }
@@ -51,8 +51,6 @@ export async function updateWeather(id, updates) {
   let weathers = await localforage.getItem("weathers");
   let weather = weathers.find((weather) => weather.id === id);
   if (!weather) throw new Error("No weather found for", id);
-  // console.log("dane w update: ", weather.city, weather.lat, weather.lon);
-  // const weatherData= await useWeatherApi(weather.lat,weather.lon)
   const temp = { city: updates.city, ...weatherData };
   // console.log("calosc: ", temp);
   Object.assign(weather, temp);

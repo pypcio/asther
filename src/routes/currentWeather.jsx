@@ -1,20 +1,22 @@
-import { Form, useLoaderData, useNavigation } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection } from "../APIs/functions";
+import DownloadButton from "../components/DownloadButton";
+import { useState } from "react";
 
 export async function loader({ params }) {
-  // console.log("twoje id: ", params.weatherId);
-  // console.log("wywołuje loader dla current:");
   const weather = await getWeather(params.weatherId);
-  // console.log(weather);
-
   return weather;
 }
 export default function CurrentWeather() {
-  const { current, timezone_offset } = useLoaderData();
-  // console.log("pokaz status strony", navigation.state);
+  const { current, timezone_offset, id } = useLoaderData();
+  const [showModal, setShowModal] = useState(false);
+  const handleModal = () => {
+    setShowModal(!showModal);
+  };
   return (
     <div>
+      {/* <DownloadButton id={id} showModal={showModal} handleModal={handleModal} /> */}
       {current ? (
         <div className="w-table">
           <ul>

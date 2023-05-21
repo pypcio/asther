@@ -50,20 +50,16 @@ function EditWeatherRoot() {
   }, []);
   useEffect(() => {
     const result = isValidCity(city);
-    console.log("result", result);
-    console.log("city", city);
     setValidCity(result);
   }, [city]);
   useEffect(() => {
     const result = isValidLatitude(lat);
-    console.log("result", result);
-    console.log("lat", lat);
+
     setValidLat(result);
   }, [lat]);
   useEffect(() => {
     const result = isValidLongitude(lon);
-    console.log("result", result);
-    console.log("lon", lon);
+
     setValidLon(result);
   }, [lon]);
   useEffect(() => {

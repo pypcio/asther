@@ -747,3 +747,13 @@ button {
   margin-bottom: 0.5rem;
   margin-left: 2rem;
 }
+#download-data {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #c8c8c8;
+  width: 500px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+}

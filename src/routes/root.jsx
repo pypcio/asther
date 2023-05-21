@@ -9,14 +9,13 @@ import {
   useSubmit,
 } from "react-router-dom";
 import { getWeathers, createWeather, deleteWeather } from "../APIs/dataAPI";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
-import { AiFillGithub } from "react-icons/ai";
 //images
 // import astherLogo from "../assets/logo-weather-app-1-2.svg";
 import astherLogo from "../assets/logo-5.svg";
-// import astherLogo from "../assets/logo-6.svg";
-// import astherLogo from "../assets/logo-2.svg";
+import { Box, Button, Modal, Typography } from "@mui/material";
+import DownloadButton from "../components/DownloadButton";
 export async function action({ request }) {
   const formData = await request.formData();
   let intent = formData.get("intent");
@@ -40,6 +39,14 @@ export async function loader({ request }) {
 }
 export default function Root() {
   const { weathers, q } = useLoaderData();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   // console.log("pogoda All", weathers);
   const navigation = useNavigation();
   const submit = useSubmit();
@@ -101,9 +108,6 @@ export default function Root() {
                     {}
                   </NavLink>
                   <DropDownMenu id={weather.id} />
-                  {/* <div className="setting">
-                    <a>&#8230;</a>
-                  </div> */}
                 </li>
               ))}
             </ul>
@@ -113,6 +117,17 @@ export default function Root() {
             </p>
           )}
         </nav>
+        <Button onClick={handleOpen}>Open modal</Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box>
+            <DownloadButton />
+          </Box>
+        </Modal>
       </div>
       <div
         id="detail"
