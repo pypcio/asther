@@ -24,6 +24,17 @@ export async function getWeathers(query) {
   return allData.sort(sortBy("city", "createdAt"));
 }
 
+export async function getWeathersOnly(query) {
+  // console.log("wchodzi tu?");
+  // await fakeNetwork(`getweathers:${query}`);
+  let weathers = await localforage.getItem("weathers");
+  if (!weathers) weathers = [];
+  if (query) {
+    weathers = matchSorter(weathers, query, { keys: ["city", "id"] });
+  }
+  return weathers.sort(sortBy("city", "createdAt"));
+}
+
 export async function createWeather() {
   // await fakeNetwork();
   let id = Math.random().toString(36).substring(2, 9);

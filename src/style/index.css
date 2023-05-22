@@ -136,6 +136,9 @@ form[action$="delete"] button {
   order: 1;
   line-height: 1;
 }
+#sidebar .MuiButtonBase-root > *:nth-child(1) {
+  margin-left: 1rem;
+}
 #logo * {
   margin: 10px;
 }
@@ -751,9 +754,45 @@ button {
   position: absolute;
   top: 50%;
   left: 50%;
-  background-color: #c8c8c8;
-  width: 500px;
-  height: 600px;
+  background-color: #ffffff;
+  width: 300px;
+  height: 420px;
   transform: translate(-50%, -50%);
-  border: 1px solid black;
+  /* border: 1px solid black; */
+}
+#download-data form {
+  position: relative;
+  display: flex;
+  height: 420px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border-bottom: 1px solid hsl(0, 0%, 89%); */
+}
+#download-data form div {
+  max-height: 350px;
+  width: 100%;
+  overflow: auto;
+}
+#download-data form p {
+  position: relative;
+  display: flex;
+  width: 100%;
+  padding-top: 0.5rem;
+  padding-left: 1rem;
+  justify-content: flex-start;
+  border-bottom: 1px solid hsl(0, 0%, 89%);
+}
+#download-data form p > * {
+  font-size: 1.2em;
+}
+input[type="checkbox"] {
+  margin-right: 1rem;
+  box-shadow: none;
+}
+#download-data form button {
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }

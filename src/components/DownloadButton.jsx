@@ -1,5 +1,5 @@
 import { useEffect, useState, forwardRef } from "react";
-import { getWeathers } from "../APIs/dataAPI";
+import { getWeathersOnly } from "../APIs/dataAPI";
 import { Form, useFetcher } from "react-router-dom";
 //pico bello dziala. Dodaje pogode w zaleznosci od id. Teraz trzeba zrobic UI do tego
 const DownloadButton = forwardRef(function DownloadButton(props, ref) {
@@ -7,12 +7,12 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
   const [selectedOptions, setSelectedOptions] = useState([]);
   useEffect(() => {
     async function getData() {
-      const result = await getWeathers();
+      const result = await getWeathersOnly();
       setData([...result]);
     }
     getData();
   }, []);
-  // console.log("DownloadButton data", storeData);
+  console.log("DownloadButton data", storeData);
   const downloadCSV = (csv, filename) => {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -25,25 +25,46 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
     document.body.removeChild(link);
   };
   const exportToCSV = (data) => {
-    console.log("export CSV", data);
-    const header = Object.keys(data[0]).join(",");
-    const csv = data.map((row) =>
-      Object.values(row)
-        .map((value) => `"${value}"`)
-        .join(",")
-    );
-    csv.unshift(header);
-    return csv.join("\n");
+    console.log("data ", data);
+    // Convert array of objects to JSON
+    // const json = JSON.stringify(data);
+    // console.log("json: ", json);
+    if (data.length !== 0) {
+      const header = Object.keys(data[0]).join(",");
+      const csv = data.map((row) =>
+        Object.values(row)
+          .map((value) => `"${value}"`)
+          .join(",")
+      );
+      csv.unshift(header);
+      const csvContent = csv.join("\n");
+
+      return csvContent;
+    }
   };
+  //NIE KONWERTUJE POPRAWNIE
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Selected option:", selectedOptions);
+    const weatherDownload = storeData.filter((weather) => {
+      return selectedOptions.includes(weather.id);
+    });
+    const parcelData = weatherDownload.map((pogoda) => {
+      const parsedHour = pogoda.hourly.map((hour) => {
+        // console.log(hour);
+        const { weather, ...newHour } = hour;
+        // console.log(newHour);
+        return newHour;
+      });
+      return { city: pogoda.city, ...parsedHour };
+    });
+    // console.log("data:", parcelData);
+    handleDownload(parcelData);
     setSelectedOptions([]);
   };
-  const handleDownload = () => {
-    console.log("siema");
-    // const csv = exportToCSV(data);
-    // downloadCSV(csv, `weather_data.csv`);
+  const handleDownload = (data) => {
+    const csv = exportToCSV(data);
+    downloadCSV(csv, `weather_data.csv`);
   };
   const handleOptionChange = (e) => {
     const value = e.target.value;
@@ -53,46 +74,37 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
     }
   };
-  if (!storeData) return null;
+  // if (!storeData) return <p>No data to download!</p>;
   return (
     <div id="download-data" ref={ref}>
       <form onSubmit={handleSubmit}>
-        {storeData
-          .filter((weather) => weather.city !== undefined)
-          .map((weather) => {
-            return (
-              <p key={weather.id + Math.floor(Math.random() * 11).toString()}>
-                <label>
-                  {weather.city}
-                  <input
-                    type="checkbox"
-                    value={weather.id}
-                    checked={selectedOptions.includes(weather.id)}
-                    onChange={handleOptionChange}
-                  />
-                </label>
-              </p>
-            );
-          })}
+        <div>
+          {!storeData ? (
+            <h3>No data to download!</h3>
+          ) : (
+            storeData
+              .filter((weather) => weather.city !== undefined)
+              .map((weather) => {
+                return (
+                  <p
+                    key={weather.id + Math.floor(Math.random() * 11).toString()}
+                  >
+                    <input
+                      type="checkbox"
+                      value={weather.id}
+                      checked={selectedOptions.includes(weather.id)}
+                      onChange={handleOptionChange}
+                    />
+                    <label>{weather.city}</label>
+                  </p>
+                );
+              })
+          )}
+        </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Download File</button>
       </form>
-      {/* <form onSubmit={handleSubmit}>
-        {storeData.map((weather) => {
-          return (
-            <p key={new Date()}>
-              <label>{weather.city}</label>
-              <input
-                type="radio"
-                defaultValue={weather.id}
-                name={weather.city}
-              />
-            </p>
-          );
-        })}
-        <button type="submit">Submit</button>
-      </form> */}
-      <button onClick={handleDownload}>Download File</button>
+      {/* <button onClick={handleDownload}>Download File</button> */}
     </div>
   );
 });

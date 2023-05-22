@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
 //images
 // import astherLogo from "../assets/logo-weather-app-1-2.svg";
+import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import DownloadButton from "../components/DownloadButton";
@@ -76,6 +77,7 @@ export default function Root() {
               placeholder="Search"
               type="search"
               name="q"
+              autoComplete="off"
               defaultValue={q}
               onChange={(event) => {
                 const isFirstSearch = q == null;
@@ -117,7 +119,9 @@ export default function Root() {
             </p>
           )}
         </nav>
-        <Button onClick={handleOpen}>Open modal</Button>
+        <Button onClick={handleOpen}>
+          {`Download weather`} <BsDownload />
+        </Button>
         <Modal
           open={open}
           onClose={handleClose}
