@@ -72,17 +72,6 @@ function isValidLongitude(input) {
 
   return true;
 }
-// function isValidCity(input) {
-//   if (!input) {
-//     return false;
-//   }
-//   input = input.trim();
-//   const regex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż\s-]{2,29}$/;
-//   if (!regex.test(input)) {
-//     return false;
-//   }
-//   return true;
-// }
 function isValidCity(input) {
   if (!input) {
     return false;

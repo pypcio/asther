@@ -1,4 +1,10 @@
-import { Form, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  Form,
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import {
   faCheck,
   faTimes,
@@ -12,10 +18,12 @@ import {
   isValidLongitude,
 } from "../APIs/functions";
 import { useEffect, useState, useRef } from "react";
+import { geocodingGoogleApi } from "../APIs/weatherAPI";
 
 export async function action({ request, params }) {
   const formData = await request.formData();
   const update = Object.fromEntries(formData);
+  console.log("update: ", update);
   await updateWeather(params.weatherId, update);
   return redirect(`/weathers/${params.weatherId}`);
 }
@@ -44,17 +52,30 @@ function EditWeatherRoot() {
   //error message
   const [errMsg, setErrMsg] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  const [disable, setDisable] = useState(false);
   useEffect(() => {
     userRef.current.focus();
   }, []);
   useEffect(() => {
+    async function locationValidationApi() {
+      const test = await geocodingGoogleApi(city);
+      if (test) {
+        setLat(test.lat.toString());
+        setLon(test.lng.toString());
+        setDisable(true);
+        // console.log("lat,lon: ", lat, lon);
+      } else {
+        setDisable(false);
+        setLat("");
+        setLon("");
+      }
+    }
+    locationValidationApi();
     const result = isValidCity(city);
     setValidCity(result);
   }, [city]);
   useEffect(() => {
     const result = isValidLatitude(lat);
-
     setValidLat(result);
   }, [lat]);
   useEffect(() => {
@@ -77,7 +98,7 @@ function EditWeatherRoot() {
               name="city"
               // id="city"
               ref={userRef}
-              defaultValue={city}
+              value={city}
               autoComplete="off"
               required
               onChange={(e) => setCity(e.target.value)}
@@ -117,7 +138,8 @@ function EditWeatherRoot() {
                   type="text"
                   name="lat"
                   id="lat"
-                  defaultValue={lat}
+                  readOnly={disable}
+                  value={lat}
                   required
                   autoComplete="off"
                   onChange={(e) => setLat(e.target.value)}
@@ -153,9 +175,10 @@ function EditWeatherRoot() {
                   name="lon"
                   id="lon"
                   ref={userRef}
-                  defaultValue={lon}
+                  value={lon}
                   autoComplete="off"
                   required
+                  readOnly={disable}
                   onChange={(e) => setLon(e.target.value)}
                   aria-label="lon"
                   aria-invalid={validLon ? "false" : "true"}

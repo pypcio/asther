@@ -9,11 +9,12 @@ export async function loader({ params }) {
   return weather;
 }
 export default function CurrentWeather() {
-  const { current, timezone_offset, id } = useLoaderData();
-  const [showModal, setShowModal] = useState(false);
-  const handleModal = () => {
-    setShowModal(!showModal);
-  };
+  const { current, timezone_offset, id, lat, lon } = useLoaderData();
+  // const [showModal, setShowModal] = useState(false);
+  // const handleModal = () => {
+  //   setShowModal(!showModal);
+  // };
+  console.log("lokacja", lat, lon);
   return (
     <div>
       {/* <DownloadButton id={id} showModal={showModal} handleModal={handleModal} /> */}

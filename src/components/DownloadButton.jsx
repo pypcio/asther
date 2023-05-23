@@ -12,7 +12,7 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
     }
     getData();
   }, []);
-  console.log("DownloadButton data", storeData);
+  // console.log("DownloadButton data", storeData);
   const downloadCSV = (csv, filename) => {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -25,7 +25,7 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
     document.body.removeChild(link);
   };
   const exportToCSV = (data) => {
-    console.log("data ", data);
+    // console.log("data ", data);
     // Convert array of objects to JSON
     // const json = JSON.stringify(data);
     // console.log("json: ", json);
@@ -45,7 +45,7 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
   //NIE KONWERTUJE POPRAWNIE
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Selected option:", selectedOptions);
+    // console.log("Selected option:", selectedOptions);
     const weatherDownload = storeData.filter((weather) => {
       return selectedOptions.includes(weather.id);
     });
@@ -59,7 +59,7 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
       return { city: pogoda.city, ...parsedHour };
     });
     // console.log("data:", parcelData);
-    handleDownload(parcelData);
+    // handleDownload(parcelData);
     setSelectedOptions([]);
   };
   const handleDownload = (data) => {
@@ -74,7 +74,6 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
       setSelectedOptions(selectedOptions.filter((option) => option !== value));
     }
   };
-  // if (!storeData) return <p>No data to download!</p>;
   return (
     <div id="download-data" ref={ref}>
       <form onSubmit={handleSubmit}>

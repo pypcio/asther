@@ -8,14 +8,14 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import { getWeathers, createWeather, deleteWeather } from "../APIs/dataAPI";
-import { useEffect, useRef, useState } from "react";
+import { getWeathers, createWeather } from "../APIs/dataAPI";
+import { useEffect, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
 //images
 // import astherLogo from "../assets/logo-weather-app-1-2.svg";
 import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import DownloadButton from "../components/DownloadButton";
 export async function action({ request }) {
   const formData = await request.formData();
@@ -27,15 +27,13 @@ export async function action({ request }) {
     return redirect(`weathers/${weather.id}/edit`);
   }
   if (intent === "delete") {
-    //dziala? xd
+    //nie potrzebne
   }
 }
 export async function loader({ request }) {
-  // console.log("update root");
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const weathers = await getWeathers(q);
-  // console.log("dane? ", weathers);
   return { weathers, q };
 }
 export default function Root() {
@@ -47,8 +45,6 @@ export default function Root() {
   const handleOpen = () => {
     setOpen(true);
   };
-
-  // console.log("pogoda All", weathers);
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =

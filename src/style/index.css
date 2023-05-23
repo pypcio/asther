@@ -325,7 +325,9 @@ i {
   flex-grow: 1;
   padding-bottom: 1rem;
 }
-
+#edit-form input[readonly] {
+  opacity: 0.7;
+}
 #edit-form a,
 a:visited {
   color: #fff;
