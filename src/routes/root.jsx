@@ -9,10 +9,11 @@ import {
   useSubmit,
 } from "react-router-dom";
 import { getWeathers, createWeather } from "../APIs/dataAPI";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
 //images
 // import astherLogo from "../assets/logo-weather-app-1-2.svg";
+import { BsThreeDots } from "react-icons/bs";
 import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal } from "@mui/material";
@@ -39,11 +40,16 @@ export async function loader({ request }) {
 export default function Root() {
   const { weathers, q } = useLoaderData();
   const [open, setOpen] = useState(false);
+  const dialogRefs = useRef([]);
   const handleClose = () => {
     setOpen(false);
   };
   const handleOpen = () => {
     setOpen(true);
+  };
+  const handleDialog = (index) => {
+    console.log(dialogRefs.current[index]);
+    dialogRefs.current[index]?.show();
   };
   const navigation = useNavigation();
   const submit = useSubmit();
@@ -53,6 +59,28 @@ export default function Root() {
   useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
+  useEffect(() => {
+    let handlers = [];
+
+    weathers.forEach((_, index) => {
+      const handler = (e) => {
+        if (
+          dialogRefs.current[index] &&
+          !dialogRefs.current[index].contains(e.target)
+        ) {
+          dialogRefs.current[index].close();
+        }
+      };
+      document.addEventListener("mousedown", handler);
+      handlers.push(handler);
+    });
+
+    return () => {
+      handlers.forEach((handler) => {
+        document.removeEventListener("mousedown", handler);
+      });
+    };
+  }, [weathers]);
   return (
     <>
       <div id="sidebar">
@@ -94,7 +122,7 @@ export default function Root() {
         <nav>
           {weathers.length ? (
             <ul>
-              {weathers.map((weather) => (
+              {weathers.map((weather, index) => (
                 <li key={weather.id}>
                   <NavLink
                     to={`weathers/${weather.id}`}
@@ -105,7 +133,19 @@ export default function Root() {
                     {weather.city ? <>{weather.city}</> : <i>No City</i>}
                     {}
                   </NavLink>
-                  <DropDownMenu id={weather.id} />
+                  {/* tutaj ma byc html dialog  */}
+                  <div
+                    className="drop-menu-button"
+                    onClick={() => handleDialog(index)}
+                  >
+                    <BsThreeDots />
+                  </div>
+                  <dialog
+                    id="modal-drop-menu"
+                    ref={(el) => (dialogRefs.current[index] = el)}
+                  >
+                    <DropDownMenu id={weather.id} />
+                  </dialog>
                 </li>
               ))}
             </ul>

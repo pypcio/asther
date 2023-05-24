@@ -19,7 +19,6 @@ import {
 } from "../APIs/functions";
 import { useEffect, useState, useRef } from "react";
 import { geocodingGoogleApi } from "../APIs/weatherAPI";
-
 export async function action({ request, params }) {
   const formData = await request.formData();
   const update = Object.fromEntries(formData);
@@ -27,7 +26,6 @@ export async function action({ request, params }) {
   await updateWeather(params.weatherId, update);
   return redirect(`/weathers/${params.weatherId}`);
 }
-
 export async function loader({ params }) {
   const weather = await getWeather(params.weatherId);
   return { weather };
