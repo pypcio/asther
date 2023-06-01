@@ -48,7 +48,7 @@ export default function Root() {
     setOpen(true);
   };
   const handleDialog = (index) => {
-    console.log(dialogRefs.current[index]);
+    // console.log(dialogRefs.current[index]);
     dialogRefs.current[index]?.show();
   };
   const navigation = useNavigation();
