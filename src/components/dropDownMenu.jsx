@@ -16,9 +16,9 @@ function DropDownMenu({ id }) {
     <div className="dropdown">
       <ul>
         <li>
-          <NavLink to={`/weathers/${id}/edit`}>
+          <Link to={`/weathers/${id}/edit`}>
             <AiOutlineEdit /> <span>Edit</span>
-          </NavLink>
+          </Link>
         </li>
         <li>
           <Form method="post" action={`/weathers/${id}/delete`}>

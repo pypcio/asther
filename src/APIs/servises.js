@@ -15,17 +15,17 @@ const getAllLocation = async () => {
 const getOneLocation = async (id) => {
   try {
     const response = await axios.get(`${url}/${id}`);
-    console.log("getOne: ", response);
-    return response;
+    // console.log("getOne: ", response);
+    return response.data;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-const createLocation = async (newLocation) => {
+const createLocation = async () => {
   try {
-    const response = await axios.post(url, newLocation);
-    return response;
+    const response = await axios.post(url);
+    return response.data;
   } catch (error) {
     console.log(error);
     throw error;
@@ -34,7 +34,7 @@ const createLocation = async (newLocation) => {
 const updateLocation = async (id, updatedLocation) => {
   try {
     const response = await axios.put(`${url}/${id}`, updatedLocation);
-    return response;
+    return response.data;
   } catch (error) {
     console.log(error);
     throw error;
