@@ -1,5 +1,6 @@
 import axios from "axios";
-async function useWeatherApi(updates) {
+
+export const useWeatherApi = async (updates) => {
   const { city, lat, lon } = updates;
   // console.log("miasto, dlugosc,szerokosc", typeof city, typeof lat, lon);
   //   console.log("dlugosc,szerokosc: ", lat, lon);
@@ -26,8 +27,8 @@ async function useWeatherApi(updates) {
   } else {
     return updates;
   }
-}
-async function geocodingGoogleApi(location) {
+};
+export const geocodingGoogleApi = async (location) => {
   if (location) {
     const temp = location.replace(/[,\s]+/g, "+");
     const params = {
@@ -46,5 +47,5 @@ async function geocodingGoogleApi(location) {
       console.log(error);
     }
   }
-}
-export { useWeatherApi, geocodingGoogleApi };
+};
+// export default { useWeatherApi, geocodingGoogleApi };

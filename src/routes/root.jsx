@@ -8,6 +8,8 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
+//api
+import servises from "../APIs/servises.js";
 import { getWeathers, createWeather } from "../APIs/dataAPI";
 import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
@@ -18,14 +20,17 @@ import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal } from "@mui/material";
 import DownloadButton from "../components/DownloadButton";
+
 export async function action({ request }) {
   const formData = await request.formData();
   let intent = formData.get("intent");
   // console.log(intent);
   // console.log("intent: ", intent);
   if (intent === "add") {
-    const weather = await createWeather();
+    const weather = await servises.createLocation();
     return redirect(`weathers/${weather.id}/edit`);
+    // console.log("stworzono: ", weather);
+    // return 1;
   }
   if (intent === "delete") {
     //nie potrzebne
@@ -34,7 +39,7 @@ export async function action({ request }) {
 export async function loader({ request }) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
-  const weathers = await getWeathers(q);
+  const weathers = await servises.getAllLocation(q);
   return { weathers, q };
 }
 export default function Root() {
