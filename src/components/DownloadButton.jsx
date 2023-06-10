@@ -34,21 +34,21 @@ const DownloadButton = forwardRef(function DownloadButton(props, ref) {
     URL.revokeObjectURL(url);
     document.body.removeChild(link);
   };
-  const exportToCSV = (data) => {
-    // console.log("data ", data);
-    // Convert array of objects to JSON
-    // const json = JSON.stringify(data);
-    // console.log("json: ", json);
-    try {
-      const opts = {};
-      const parser = new Parser(opts);
-      const csv = parser.parse(data);
-      return csv;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  //NIE KONWERTUJE POPRAWNIE
+  // const exportToCSV = (data) => {
+  //   // console.log("data ", data);
+  //   // Convert array of objects to JSON
+  //   // const json = JSON.stringify(data);
+  //   // console.log("json: ", json);
+  //   try {
+  //     const opts = {};
+  //     const parser = new Parser(opts);
+  //     const csv = parser.parse(data);
+  //     return csv;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log("Selected option:", selectedOptions);

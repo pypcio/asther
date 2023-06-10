@@ -19,7 +19,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal } from "@mui/material";
-import DownloadButton from "../components/DownloadButton";
+import DownloadButton from "../components/downloadButton.jsx";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -57,7 +57,7 @@ export default function Root() {
     dialogRefs.current[index]?.show();
   };
   const navigation = useNavigation();
-  console.log("navigation", navigation);
+  // console.log("navigation", navigation);
   const submit = useSubmit();
   const searching =
     navigation.location &&
