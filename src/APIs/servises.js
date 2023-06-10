@@ -28,6 +28,16 @@ const getAllLocation = async (query) => {
   }
 };
 
+const getDownloadData = async () => {
+  try {
+    const response = await axios.get(`${url}/download`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const getOneLocation = async (id) => {
   try {
     const response = await axios.get(`${url}/${id}`);
@@ -67,4 +77,5 @@ export default {
   createLocation,
   updateLocation,
   deleteLocation,
+  getDownloadData,
 };
