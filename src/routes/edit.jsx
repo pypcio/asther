@@ -11,7 +11,9 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+//API
 import { getWeather, updateWeather } from "../APIs/dataAPI";
+import servises from "../APIs/servises";
 import {
   isValidCity,
   isValidLatitude,
@@ -19,15 +21,17 @@ import {
 } from "../APIs/functions";
 import { useEffect, useState, useRef } from "react";
 import { geocodingGoogleApi } from "../APIs/weatherAPI";
+
 export async function action({ request, params }) {
   const formData = await request.formData();
   const update = Object.fromEntries(formData);
   console.log("update: ", update);
-  await updateWeather(params.weatherId, update);
+  await servises.updateLocation(params.weatherId, update);
   return redirect(`/weathers/${params.weatherId}`);
 }
+
 export async function loader({ params }) {
-  const weather = await getWeather(params.weatherId);
+  const weather = await servises.getOneLocation(params.weatherId);
   return { weather };
 }
 function EditWeatherRoot() {

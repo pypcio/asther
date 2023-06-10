@@ -1,10 +1,10 @@
-import { useLoaderData, useNavigation } from "react-router-dom";
+import { Link, useLoaderData, useNavigation } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
-
+import servises from "../APIs/servises";
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
-  const weather = await getWeather(params.weatherId);
+  const weather = await servises.getOneLocation(params.weatherId);
   // console.log(weather);
   return weather;
 }
@@ -16,7 +16,7 @@ export default function DailyWeather() {
   // console.log("state: ", navigation.state);
   return (
     <>
-      {daily &&
+      {Object.keys(daily).length !== 1 ? (
         daily.map((day) => {
           // console.log("each day: ", day.temp);
           const date = day?.dt
@@ -67,7 +67,15 @@ export default function DailyWeather() {
               </ul>
             </div>
           );
-        })}
+        })
+      ) : (
+        <div className="options">
+          <p>add location first:</p>
+          <Link to="edit">
+            <button>Edit</button>
+          </Link>
+        </div>
+      )}
     </>
   );
 }

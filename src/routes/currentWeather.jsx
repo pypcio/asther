@@ -1,24 +1,25 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, Link, useLoaderData } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection } from "../APIs/functions";
 import DownloadButton from "../components/DownloadButton";
 import { useState } from "react";
+import servises from "../APIs/servises";
 
 export async function loader({ params }) {
-  const weather = await getWeather(params.weatherId);
+  const weather = await servises.getOneLocation(params.weatherId);
   return weather;
 }
 export default function CurrentWeather() {
-  const { current, timezone_offset, id, lat, lon } = useLoaderData();
+  const { current, timezone_offset } = useLoaderData();
   // const [showModal, setShowModal] = useState(false);
   // const handleModal = () => {
   //   setShowModal(!showModal);
   // };
-  console.log("lokacja", lat, lon);
+  console.log("lokacja", current);
   return (
-    <div>
+    <>
       {/* <DownloadButton id={id} showModal={showModal} handleModal={handleModal} /> */}
-      {current ? (
+      {Object.keys(current).length !== 1 ? (
         <div className="w-table">
           <ul>
             <li>{`${new Date(
@@ -70,13 +71,13 @@ export default function CurrentWeather() {
           </ul>
         </div>
       ) : (
-        <div className="edit-option">
-          <Form action="edit">
-            <p>add location first:</p>
-            <button type="submit">Edit</button>
-          </Form>
+        <div className="options">
+          <p>add location first:</p>
+          <Link to="edit">
+            <button>Edit</button>
+          </Link>
         </div>
       )}
-    </div>
+    </>
   );
 }

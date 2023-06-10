@@ -1,17 +1,18 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
-
+import servises from "../APIs/servises";
 export async function loader({ params }) {
   // console.log("twoje id: ", params.weatherId);
-  const weather = await getWeather(params.weatherId);
+  const weather = await servises.getOneLocation(params.weatherId);
   return weather;
 }
 export default function HourlyWeather() {
   const { hourly, timezone_offset } = useLoaderData();
+  // console.log("godzinowa: ", hourly.length);
   return (
     <>
-      {hourly &&
+      {hourly.length !== 0 ? (
         hourly.map((hour, index) => {
           // console.log("sprawdzam", new Date(hour.dt * 1000));
           return (
@@ -78,7 +79,15 @@ export default function HourlyWeather() {
               </div>
             </div>
           );
-        })}
+        })
+      ) : (
+        <div className="options">
+          <p>add location first:</p>
+          <Link to="edit">
+            <button>Edit</button>
+          </Link>
+        </div>
+      )}
     </>
   );
 }
