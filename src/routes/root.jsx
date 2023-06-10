@@ -7,6 +7,7 @@ import {
   NavLink,
   useNavigation,
   useSubmit,
+  useLocation,
 } from "react-router-dom";
 //api
 import servises from "../APIs/servises.js";
@@ -67,7 +68,6 @@ export default function Root() {
   }, [q]);
   useEffect(() => {
     let handlers = [];
-
     weathers.forEach((_, index) => {
       const handler = (e) => {
         // console.log(dialogRefs.current[index].contains(e.target));
@@ -93,6 +93,8 @@ export default function Root() {
       });
     };
   }, [weathers]);
+  const location = useLocation();
+  console.log("location ", location.pathname);
   return (
     <>
       <div id="sidebar">
