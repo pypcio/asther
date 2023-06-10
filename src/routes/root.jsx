@@ -57,6 +57,7 @@ export default function Root() {
     dialogRefs.current[index]?.show();
   };
   const navigation = useNavigation();
+  console.log("navigation", navigation);
   const submit = useSubmit();
   const searching =
     navigation.location &&
@@ -69,17 +70,23 @@ export default function Root() {
 
     weathers.forEach((_, index) => {
       const handler = (e) => {
+        // console.log(dialogRefs.current[index].contains(e.target));
         if (
           dialogRefs.current[index] &&
           !dialogRefs.current[index].contains(e.target)
         ) {
           dialogRefs.current[index].close();
         }
+        if (dialogRefs.current[index].contains(e.target)) {
+          setTimeout(() => {
+            dialogRefs.current[index].close();
+          }, 100);
+        }
       };
       document.addEventListener("mousedown", handler);
       handlers.push(handler);
     });
-
+    // console.log(dialogRefs.current[0]);
     return () => {
       handlers.forEach((handler) => {
         document.removeEventListener("mousedown", handler);

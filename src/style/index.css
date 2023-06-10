@@ -774,22 +774,30 @@ button {
   top: 50%;
   left: 50%;
   background-color: #ffffff;
-  width: 300px;
-  height: 420px;
+  width: 200px;
+  height: 300px;
   transform: translate(-50%, -50%);
   /* border: 1px solid black; */
+}
+#download-data h3 {
+  color: hsla(0, 2%, 12%, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #download-data form {
   position: relative;
   display: flex;
-  height: 420px;
+  /* height: 420px; */
+  height: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   /* border-bottom: 1px solid hsl(0, 0%, 89%); */
 }
 #download-data form div {
-  max-height: 350px;
+  /* max-height: 350px;
+  width: 100%; */
   width: 100%;
   overflow: auto;
 }
@@ -802,8 +810,15 @@ button {
   justify-content: flex-start;
   border-bottom: 1px solid hsl(0, 0%, 89%);
 }
+#download-data form p:last-child {
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  margin: 0px;
+  padding: 0px;
+}
 #download-data form p > * {
-  font-size: 1.2em;
+  font-size: 1em;
 }
 input[type="checkbox"] {
   margin-right: 1rem;
