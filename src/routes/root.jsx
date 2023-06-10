@@ -8,15 +8,16 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
-import { getWeathers, createWeather, deleteWeather } from "../APIs/dataAPI";
-import { useEffect } from "react";
+import { getWeathers, createWeather } from "../APIs/dataAPI";
+import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
-import { AiFillGithub } from "react-icons/ai";
 //images
 // import astherLogo from "../assets/logo-weather-app-1-2.svg";
+import { BsThreeDots } from "react-icons/bs";
+import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
-// import astherLogo from "../assets/logo-6.svg";
-// import astherLogo from "../assets/logo-2.svg";
+import { Box, Button, Modal } from "@mui/material";
+import DownloadButton from "../components/DownloadButton";
 export async function action({ request }) {
   const formData = await request.formData();
   let intent = formData.get("intent");
@@ -27,20 +28,29 @@ export async function action({ request }) {
     return redirect(`weathers/${weather.id}/edit`);
   }
   if (intent === "delete") {
-    //dziala? xd
+    //nie potrzebne
   }
 }
 export async function loader({ request }) {
-  // console.log("update root");
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const weathers = await getWeathers(q);
-  // console.log("dane? ", weathers);
   return { weathers, q };
 }
 export default function Root() {
   const { weathers, q } = useLoaderData();
-  // console.log("pogoda All", weathers);
+  const [open, setOpen] = useState(false);
+  const dialogRefs = useRef([]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleDialog = (index) => {
+    console.log(dialogRefs.current[index]);
+    dialogRefs.current[index]?.show();
+  };
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
@@ -49,16 +59,38 @@ export default function Root() {
   useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
+  useEffect(() => {
+    let handlers = [];
+
+    weathers.forEach((_, index) => {
+      const handler = (e) => {
+        if (
+          dialogRefs.current[index] &&
+          !dialogRefs.current[index].contains(e.target)
+        ) {
+          dialogRefs.current[index].close();
+        }
+      };
+      document.addEventListener("mousedown", handler);
+      handlers.push(handler);
+    });
+
+    return () => {
+      handlers.forEach((handler) => {
+        document.removeEventListener("mousedown", handler);
+      });
+    };
+  }, [weathers]);
   return (
     <>
       <div id="sidebar">
-        <p id="logo">
+        <footer id="logo">
           {/* <Link>
             <AiFillGithub />
           </Link> */}
           <img src={astherLogo} className="logo" alt="Asther logo" />
-          <p>Asther</p>
-        </p>
+          <h4>Asther</h4>
+        </footer>
         {/* <h1>Asther</h1> */}
         <div>
           <Form id="search-form" role="search">
@@ -69,6 +101,7 @@ export default function Root() {
               placeholder="Search"
               type="search"
               name="q"
+              autoComplete="off"
               defaultValue={q}
               onChange={(event) => {
                 const isFirstSearch = q == null;
@@ -89,7 +122,7 @@ export default function Root() {
         <nav>
           {weathers.length ? (
             <ul>
-              {weathers.map((weather) => (
+              {weathers.map((weather, index) => (
                 <li key={weather.id}>
                   <NavLink
                     to={`weathers/${weather.id}`}
@@ -100,10 +133,19 @@ export default function Root() {
                     {weather.city ? <>{weather.city}</> : <i>No City</i>}
                     {}
                   </NavLink>
-                  <DropDownMenu id={weather.id} />
-                  {/* <div className="setting">
-                    <a>&#8230;</a>
-                  </div> */}
+                  {/* tutaj ma byc html dialog  */}
+                  <div
+                    className="drop-menu-button"
+                    onClick={() => handleDialog(index)}
+                  >
+                    <BsThreeDots />
+                  </div>
+                  <dialog
+                    id="modal-drop-menu"
+                    ref={(el) => (dialogRefs.current[index] = el)}
+                  >
+                    <DropDownMenu id={weather.id} />
+                  </dialog>
                 </li>
               ))}
             </ul>
@@ -113,6 +155,19 @@ export default function Root() {
             </p>
           )}
         </nav>
+        <Button onClick={handleOpen}>
+          {`Download weather`} <BsDownload />
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box>
+            <DownloadButton />
+          </Box>
+        </Modal>
       </div>
       <div
         id="detail"

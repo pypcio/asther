@@ -1,12 +1,15 @@
 import {
   Form,
   Link,
+  NavLink,
   Outlet,
   useLoaderData,
+  useLocation,
   useNavigate,
+  useNavigation,
 } from "react-router-dom";
 import { getWeather } from "../APIs/dataAPI";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { convertedDate } from "../APIs/functions";
 import CurrentWeather from "./currentWeather";
 export async function loader({ params }) {
@@ -17,9 +20,17 @@ export async function loader({ params }) {
 }
 export default function WeatherRoot() {
   const { weather } = useLoaderData();
+  const location = useLocation();
+  // console.log("location", location.pathname);
+  const [currentFocus, setCurrentFocus] = useState(false);
   const date = weather?.current?.dt
     ? convertedDate(weather.current.dt + weather.timezone_offset)
     : convertedDate(null);
+  useEffect(() => {
+    location.pathname === `/weathers/${weather.id}`
+      ? setCurrentFocus(true)
+      : setCurrentFocus(false);
+  }, [location.pathname]);
   return (
     <>
       {weather ? (
@@ -32,13 +43,22 @@ export default function WeatherRoot() {
           </div>
           <div id="linki-pogodowe">
             <p>
-              <Link to={`/weathers/${weather.id}` || "/"}>Current</Link>
+              <Link
+                className={currentFocus ? "active" : ""}
+                to={`/weathers/${weather.id}` || "/"}
+              >
+                Obecnie
+              </Link>
             </p>
             <p>
-              <Link to={`/weathers/${weather.id}/hourly` || "/"}>Hourly</Link>
+              <NavLink to={`/weathers/${weather.id}/hourly` || "/"}>
+                Godzinowa
+              </NavLink>
             </p>
             <p>
-              <Link to={`/weathers/${weather.id}/daily` || "/"}>Daily</Link>
+              <NavLink to={`/weathers/${weather.id}/daily` || "/"}>
+                Dzienna
+              </NavLink>
             </p>
           </div>
         </div>

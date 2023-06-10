@@ -11,14 +11,14 @@ export async function loader({ params }) {
 export default function DailyWeather() {
   const { daily, timezone_offset } = useLoaderData();
   const navigation = useNavigation();
-  console.log(daily);
+  // console.log(daily);
   // console.log("location: ", navigation.location);
   // console.log("state: ", navigation.state);
   return (
     <>
       {daily &&
         daily.map((day) => {
-          console.log("each day: ", day.temp);
+          // console.log("each day: ", day.temp);
           const date = day?.dt
             ? convertedDate(day.dt + timezone_offset)
             : convertedDate(null);
@@ -43,7 +43,7 @@ export default function DailyWeather() {
               <ul>
                 <li>{`${day.clouds || "0 "}%`}</li>
                 <li>{`${day.humidity || "0 "}%`}</li>
-                <li>{`${day.pop * 100 || "0 "}%`}</li>
+                <li>{`${Math.round(day.pop * 100) || "0 "}%`}</li>
               </ul>
               <ul>
                 <li>Ciśnienie</li>
