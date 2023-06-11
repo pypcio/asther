@@ -110,7 +110,7 @@ form[action$="delete"] button {
   height: 100%;
   width: 100%;
 }
-/* #wrap-app {
+#wrap-app {
   position: relative;
   width: 100%;
   height: 100%;
@@ -129,18 +129,19 @@ form[action$="delete"] button {
   background-position: 50% 32%;
   background-size: cover;
 }
-#test1 {
+#application {
   position: relative;
   display: flex;
   height: 100%;
   width: 100%;
-} */
+}
 #sidebar {
   width: 18rem;
   background-color: #f7f7f7;
   border-right: solid 1px hsl(0, 0%, 89%);
   display: flex;
   flex-direction: column;
+  animation: slide-in 1s ease-in-out forwards;
 }
 
 #sidebar > * {
@@ -162,6 +163,16 @@ form[action$="delete"] button {
 }
 #sidebar .MuiButtonBase-root > *:nth-child(1) {
   margin-left: 1rem;
+}
+@keyframes slide-in {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 #logo * {
   margin: 10px;
@@ -319,7 +330,7 @@ i {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 1rem 2rem;
+  /* padding: 1rem 2rem; */
   width: 30rem;
   /* background-color: hsl(210, 20%, 95%); */
 }
@@ -602,21 +613,6 @@ button {
 /* #edit-form p input:first-child {
   margin-right: 1rem;
 } */
-#zero-state {
-  align-items: center;
-  justify-content: center;
-  margin: 2rem auto;
-  text-align: center;
-  color: #636363;
-}
-
-#zero-state a {
-  color: inherit;
-}
-
-#zero-state a:hover {
-  color: #121212;
-}
 
 /* #zero-state:before {
   display: block;
@@ -637,7 +633,9 @@ button {
   flex-direction: column;
   justify-content: center;
   border-bottom: 2px solid hsl(0, 0%, 89%);
+  background-color: #f7f7f7;
 }
+
 #detail > div {
   display: flex;
   flex-direction: column;
@@ -645,24 +643,30 @@ button {
 #detail nav {
   flex: 1;
   overflow: auto;
+  margin-bottom: 0;
 }
 
 #weather > :first-child {
   /* color: #12073b; */
   opacity: 0.8;
-  display: flex;
   justify-content: space-between;
-  margin-right: 1rem;
-  margin-bottom: 1.6rem;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  margin-top: 0.5rem;
+  /* margin-bottom: 1.6rem; */
 }
-#weather > :first-child a {
-  padding-top: 0.1rem;
+#weather > :first-child :nth-child(2) {
+  margin-left: auto;
+  margin-right: 2rem;
+}
+#weather > :first-child h3 {
+  /* padding-top: 0.1rem; */
+  /* font-size: 1rem; */
 }
 #weather > div {
   display: flex;
   align-items: center;
-  margin-left: 2rem;
-  gap: 2em;
+  /* gap: 2em; */
 }
 #weather h1 ~ div {
   display: flex;
@@ -684,10 +688,17 @@ button {
 }
 #linki-pogodowe {
   height: auto;
+  margin-left: 1rem;
+  /* background-color: hsl(0, 0%, 89%); */
+}
+#linki-pogodowe p {
+  padding-left: 1rem;
+  margin-top: 1rem;
 }
 #linki-pogodowe p a {
   padding-top: 0.59rem;
   padding-bottom: 0.59rem;
+  font-size: 1rem;
 }
 #weather a:hover {
   /* display: block; */
@@ -705,6 +716,12 @@ button {
 #weather-template > div {
   scroll-snap-align: start;
 } */
+#weather-template {
+  display: flex;
+  margin-bottom: 0;
+  flex: 1;
+  overflow: auto;
+}
 #weather-template > div:nth-child(2n + 1) {
   background-color: hsl(210, 21%, 90%);
 }
@@ -901,4 +918,30 @@ input[type="checkbox"] {
 }
 #modal-drop-menu button:hover {
   background: hsl(0, 0%, 89%);
+}
+#zero-state {
+  /* flex-direction: row !important; */
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  /* margin: 2rem auto; */
+  /* color: #636363; */
+}
+
+#zero-state a,
+#main-page a {
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.5rem;
+  margin-top: 1.5px;
+  font-weight: 500;
+  color: #3a3636;
+}
+
+#zero-state a:hover {
+  transform: scale(1.05);
 }

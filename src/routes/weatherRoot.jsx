@@ -23,7 +23,7 @@ export async function loader({ params }) {
 export default function WeatherRoot() {
   const { weather } = useLoaderData();
   const location = useLocation();
-  // console.log("location", location.pathname);
+  console.log("location", location.pathname);
   const [currentFocus, setCurrentFocus] = useState(false);
   const date = weather?.current?.dt
     ? convertedDate(weather.current.dt + weather.timezone_offset)
@@ -41,6 +41,9 @@ export default function WeatherRoot() {
             <h3>{weather.city || `City`}</h3>
           </Link>
           <h4>{date}</h4>
+          <Link to="/">
+            <h4>ASTHER</h4>
+          </Link>
         </div>
         <div id="linki-pogodowe">
           <p>
@@ -62,9 +65,9 @@ export default function WeatherRoot() {
         </div>
       </div>
 
-      <nav id="weather-template">
+      <div id="weather-template">
         <Outlet />
-      </nav>
+      </div>
     </>
   );
 }

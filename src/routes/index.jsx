@@ -1,10 +1,10 @@
+import { Link } from "react-router-dom";
 import astherLogo from "../assets/logo-5.svg";
+import Home from "./home";
 export default function Index() {
   return (
     <div id="zero-state">
-      <h1>Asther</h1>
-      <p>Your Personal Weather Diary</p>
-      <img src={astherLogo} className="logo" alt="Asther logo" />
+      <Link to="/">ASTHER</Link>
     </div>
   );
 }

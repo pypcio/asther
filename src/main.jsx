@@ -44,7 +44,7 @@ const router = createBrowserRouter(
         <Route path="register" element={<Register />} action={registerAction} />
       </Route>
       <Route
-        path="/weathers"
+        path="/:userId"
         element={<Root />}
         errorElement={<ErrorPage />}
         loader={rootLoader}
@@ -53,7 +53,7 @@ const router = createBrowserRouter(
         <Route errorElement={<ErrorPage />}>
           <Route index element={<Index />} />
           <Route
-            path="/weathers/:weatherId"
+            path="/:userId/:weatherId"
             element={<WeatherRoot />}
             loader={weatherRootLoader}
           >
@@ -64,24 +64,24 @@ const router = createBrowserRouter(
               loader={currentWeatherLoader}
             />
             <Route
-              path="/weathers/:weatherId/hourly"
+              path="/:userId/:weatherId/hourly"
               element={<HourlyWeather />}
               loader={hourlyWeatherLoader}
             />
             <Route
-              path="/weathers/:weatherId/daily"
+              path="/:userId/:weatherId/daily"
               element={<DailyWeather />}
               loader={dailyWeatherLoader}
             />
           </Route>
           <Route
-            path="/weathers/:weatherId/edit"
+            path="/:userId/:weatherId/edit"
             element={<EditWeatherRoot />}
             loader={editWeatherLoader}
             action={editWeatherRootAction}
           />
           <Route
-            path="/weathers/:weatherId/delete"
+            path="/:userId/:weatherId/delete"
             action={deleteAction}
             errorElement={<ErrorPage />}
           />

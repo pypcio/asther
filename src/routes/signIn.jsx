@@ -46,7 +46,7 @@ function SignIn() {
             />
           </div>
           <div className="lh-copy mt3 flex justify-center ">
-            <p className="black flex items-center ph3">New here?</p>
+            <p className="black flex items-center ph3 f5">New here?</p>
             <Link
               to="/register"
               className="flex items-center b ph3 pv2 input-reset bg-transparent grow pointer f6  dim"

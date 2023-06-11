@@ -96,99 +96,101 @@ export default function Root() {
   const location = useLocation();
   console.log("location ", location.pathname);
   return (
-    <>
-      <div id="sidebar">
-        <footer id="logo">
-          {/* <Link>
+    <div id="wrap-app">
+      <div id="application">
+        <div id="sidebar">
+          <footer id="logo">
+            {/* <Link>
             <AiFillGithub />
           </Link> */}
-          <img src={astherLogo} className="logo" alt="Asther logo" />
-          <h4>Asther</h4>
-        </footer>
-        {/* <h1>Asther</h1> */}
-        <div>
-          <Form id="search-form" role="search">
-            <input
-              id="q"
-              className={searching ? "loading" : ""}
-              aria-label="Search contacts"
-              placeholder="Search"
-              type="search"
-              name="q"
-              autoComplete="off"
-              defaultValue={q}
-              onChange={(event) => {
-                const isFirstSearch = q == null;
-                submit(event.currentTarget.form, {
-                  replace: !isFirstSearch,
-                });
-              }}
-            />
-            <div id="search-spinner" aria-hidden hidden={!searching} />
-            <div className="sr-only" aria-live="polite"></div>
-          </Form>
-          <Form method="post">
-            <button type="submit" name="intent" value="add">
-              New
-            </button>
-          </Form>
+            <img src={astherLogo} className="logo" alt="Asther logo" />
+            <h4>Asther</h4>
+          </footer>
+          {/* <h1>Asther</h1> */}
+          <div>
+            <Form id="search-form" role="search">
+              <input
+                id="q"
+                className={searching ? "loading" : ""}
+                aria-label="Search contacts"
+                placeholder="Search"
+                type="search"
+                name="q"
+                autoComplete="off"
+                defaultValue={q}
+                onChange={(event) => {
+                  const isFirstSearch = q == null;
+                  submit(event.currentTarget.form, {
+                    replace: !isFirstSearch,
+                  });
+                }}
+              />
+              <div id="search-spinner" aria-hidden hidden={!searching} />
+              <div className="sr-only" aria-live="polite"></div>
+            </Form>
+            <Form method="post">
+              <button type="submit" name="intent" value="add">
+                New
+              </button>
+            </Form>
+          </div>
+          <nav>
+            {weathers.length ? (
+              <ul>
+                {weathers.map((weather, index) => (
+                  <li key={weather.id}>
+                    <NavLink
+                      to={`/1/${weather.id}`}
+                      className={({ isActive, isPending }) =>
+                        isActive ? " active" : isPending ? " pending" : ""
+                      }
+                    >
+                      {weather.city ? <>{weather.city}</> : <i>No City</i>}
+                      {}
+                    </NavLink>
+                    {/* tutaj ma byc html dialog  */}
+                    <div
+                      className="drop-menu-button"
+                      onClick={() => handleDialog(index)}
+                    >
+                      <BsThreeDots />
+                    </div>
+                    <dialog
+                      id="modal-drop-menu"
+                      ref={(el) => (dialogRefs.current[index] = el)}
+                    >
+                      <DropDownMenu id={weather.id} />
+                    </dialog>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>
+                <i>No locations added</i>
+              </p>
+            )}
+          </nav>
+          <Button onClick={handleOpen}>
+            {`Download weather`} <BsDownload />
+          </Button>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box>
+              <DownloadButton />
+            </Box>
+          </Modal>
         </div>
-        <nav>
-          {weathers.length ? (
-            <ul>
-              {weathers.map((weather, index) => (
-                <li key={weather.id}>
-                  <NavLink
-                    to={`weathers/${weather.id}`}
-                    className={({ isActive, isPending }) =>
-                      isActive ? " active" : isPending ? " pending" : ""
-                    }
-                  >
-                    {weather.city ? <>{weather.city}</> : <i>No City</i>}
-                    {}
-                  </NavLink>
-                  {/* tutaj ma byc html dialog  */}
-                  <div
-                    className="drop-menu-button"
-                    onClick={() => handleDialog(index)}
-                  >
-                    <BsThreeDots />
-                  </div>
-                  <dialog
-                    id="modal-drop-menu"
-                    ref={(el) => (dialogRefs.current[index] = el)}
-                  >
-                    <DropDownMenu id={weather.id} />
-                  </dialog>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>
-              <i>No locations added</i>
-            </p>
-          )}
-        </nav>
-        <Button onClick={handleOpen}>
-          {`Download weather`} <BsDownload />
-        </Button>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        <div
+          id="detail"
+          className={navigation.state === "loading" ? "loading" : ""}
         >
-          <Box>
-            <DownloadButton />
-          </Box>
-        </Modal>
+          <Outlet />
+        </div>
       </div>
-      <div
-        id="detail"
-        className={navigation.state === "loading" ? "loading" : ""}
-      >
-        <Outlet />
-      </div>
-    </>
+    </div>
   );
 }
