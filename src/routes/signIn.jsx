@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Link, redirect } from "react-router-dom";
+import { Form, Link, redirect, useNavigation } from "react-router-dom";
 
 export async function action({ request, params }) {
   console.log("odpala?");
@@ -9,8 +9,12 @@ export async function action({ request, params }) {
   return redirect("/");
 }
 function SignIn() {
+  const navigation = useNavigation();
+  console.log(navigation.state);
   return (
-    <article className="br3 ba shadow-5 b--black-20 mv4 w-100 w-50-m w-25-l mw center">
+    <article
+      className={`br3 ba shadow-5 b--black-20 mv4 w-100 w-50-m w-25-l mw center fade-in`}
+    >
       <main className="pa4 black-80">
         <Form method="post" className="measure">
           <fieldset id="sign_up" className="ba b--transparent ph0 mh0">

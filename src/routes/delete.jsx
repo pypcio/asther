@@ -5,5 +5,5 @@ import servises from "../APIs/servises";
 export async function action({ params }) {
   // throw new Error("oh dang!");
   await servises.deleteLocation(params.weatherId);
-  return redirect("/");
+  return redirect("/1");
 }

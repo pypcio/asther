@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { Form, Link, NavLink, useParams } from "react-router-dom";
-import { createPortal } from "react-dom";
 //style
 // import "../style/dropDownMenu.css";
 // import editImage from "../assets/icon-edit.png";
@@ -16,12 +15,12 @@ function DropDownMenu({ id }) {
     <div className="dropdown">
       <ul>
         <li>
-          <Link to={`/weathers/${id}/edit`}>
+          <Link to={`/${id}/edit`}>
             <AiOutlineEdit /> <span>Edit</span>
           </Link>
         </li>
         <li>
-          <Form method="post" action={`/weathers/${id}/delete`}>
+          <Form method="post" action={`/1/${id}/delete`}>
             <button type="submit" name="intent" value="delete">
               <MdDeleteOutline /> <span>Delete</span>
             </button>
