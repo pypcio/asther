@@ -1,5 +1,4 @@
 import {
-  Link,
   Outlet,
   useLoaderData,
   Form,
@@ -8,6 +7,8 @@ import {
   useNavigation,
   useSubmit,
   useLocation,
+  useNavigate,
+  useParams,
 } from "react-router-dom";
 //api
 import servises from "../APIs/servises.js";
@@ -15,38 +16,117 @@ import { getWeathers, createWeather } from "../APIs/dataAPI";
 import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
 //images
-// import astherLogo from "../assets/logo-weather-app-1-2.svg";
 import { BsThreeDots } from "react-icons/bs";
 import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal } from "@mui/material";
 import DownloadButton from "../components/downloadButton.jsx";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
+//
 
 export async function action({ request }) {
   const formData = await request.formData();
   let intent = formData.get("intent");
-  // console.log(intent);
-  // console.log("intent: ", intent);
   if (intent === "add") {
     const weather = await servises.createLocation();
-    return redirect(`weathers/${weather.id}/edit`);
-    // console.log("stworzono: ", weather);
-    // return 1;
+    return redirect(`/weathers/${weather.id}/edit`);
   }
   if (intent === "delete") {
     //nie potrzebne
   }
 }
-export async function loader({ request }) {
+// export const loader =async ({ request }) => {
+//     const url = new URL(request.url);
+//     const q = url.searchParams.get("q");
+//     const weathers = await servises.getAllLocation(q);
+//     console.log("pokaz dane: ", weathers);
+//     return { weathers, q };
+//   };
+
+export const loader = async ({ request }) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
-  const weathers = await servises.getAllLocation(q);
-  return { weathers, q };
-}
+  return { q };
+};
+
 export default function Root() {
-  const { weathers, q } = useLoaderData();
+  const [weathers, setWeathers] = useState([]);
+  const privateAxios = useAxiosPrivate();
+  const { q } = useLoaderData();
   const [open, setOpen] = useState(false);
   const dialogRefs = useRef([]);
+  const navigation = useNavigation();
+  const submit = useSubmit();
+  const navigate = useNavigate();
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const getUserData = async () => {
+      try {
+        const response = await servises.getAllLocation(
+          q,
+          controller.signal,
+          privateAxios
+        );
+        console.log("response: ", response.length);
+        isMounted && setWeathers(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+  useEffect(() => {
+    document.getElementById("q").value = q;
+  }, [q]);
+
+  useEffect(() => {
+    let handlers = [];
+    if (weathers) {
+      weathers.forEach((_, index) => {
+        const handler = (e) => {
+          // console.log(dialogRefs.current[index].contains(e.target));
+          if (
+            dialogRefs.current[index] &&
+            !dialogRefs.current[index].contains(e.target)
+          ) {
+            dialogRefs.current[index].close();
+          }
+          if (dialogRefs.current[index].contains(e.target)) {
+            setTimeout(() => {
+              dialogRefs.current[index].close();
+            }, 100);
+          }
+        };
+        document.addEventListener("mousedown", handler);
+        handlers.push(handler);
+      });
+    }
+    return () => {
+      handlers.forEach((handler) => {
+        document.removeEventListener("mousedown", handler);
+      });
+    };
+  }, [weathers.length]);
+
+  const handleNewLocation = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await servises.createLocation(privateAxios);
+      console.log("root response: ", response);
+      const id = response._id.toString();
+      navigate(`/user/weathers/${id}/edit`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
   const handleClose = () => {
     setOpen(false);
   };
@@ -54,45 +134,8 @@ export default function Root() {
     setOpen(true);
   };
   const handleDialog = (index) => {
-    // console.log(dialogRefs.current[index]);
     dialogRefs.current[index]?.show();
   };
-  const navigation = useNavigation();
-  // console.log("navigation", navigation);
-  const submit = useSubmit();
-  const searching =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has("q");
-  useEffect(() => {
-    document.getElementById("q").value = q;
-  }, [q]);
-  useEffect(() => {
-    let handlers = [];
-    weathers.forEach((_, index) => {
-      const handler = (e) => {
-        // console.log(dialogRefs.current[index].contains(e.target));
-        if (
-          dialogRefs.current[index] &&
-          !dialogRefs.current[index].contains(e.target)
-        ) {
-          dialogRefs.current[index].close();
-        }
-        if (dialogRefs.current[index].contains(e.target)) {
-          setTimeout(() => {
-            dialogRefs.current[index].close();
-          }, 100);
-        }
-      };
-      document.addEventListener("mousedown", handler);
-      handlers.push(handler);
-    });
-    // console.log(dialogRefs.current[0]);
-    return () => {
-      handlers.forEach((handler) => {
-        document.removeEventListener("mousedown", handler);
-      });
-    };
-  }, [weathers]);
   const location = useLocation();
   console.log("location ", location.pathname);
   return (
@@ -128,24 +171,28 @@ export default function Root() {
               <div id="search-spinner" aria-hidden hidden={!searching} />
               <div className="sr-only" aria-live="polite"></div>
             </Form>
-            <Form method="post">
+            <form onSubmit={handleNewLocation}>
               <button type="submit" name="intent" value="add">
                 New
               </button>
-            </Form>
+            </form>
           </div>
           <nav>
-            {weathers.length ? (
+            {weathers !== null ? (
               <ul>
                 {weathers.map((weather, index) => (
-                  <li key={weather.id}>
+                  <li key={weather._id.toString()}>
                     <NavLink
-                      to={`/1/${weather.id}`}
+                      to={`/user/weathers/${weather._id.toString()}`}
                       className={({ isActive, isPending }) =>
                         isActive ? " active" : isPending ? " pending" : ""
                       }
                     >
-                      {weather.city ? <>{weather.city}</> : <i>No City</i>}
+                      {weather.location?.city ? (
+                        <>{weather.location.city}</>
+                      ) : (
+                        <i>No City</i>
+                      )}
                       {}
                     </NavLink>
                     {/* tutaj ma byc html dialog  */}
@@ -159,7 +206,7 @@ export default function Root() {
                       id="modal-drop-menu"
                       ref={(el) => (dialogRefs.current[index] = el)}
                     >
-                      <DropDownMenu id={weather.id} />
+                      <DropDownMenu id={weather._id.toString()} />
                     </dialog>
                   </li>
                 ))}

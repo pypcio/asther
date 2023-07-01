@@ -1,33 +1,72 @@
-import React from "react";
-import { Form, Link, redirect, useNavigation } from "react-router-dom";
+import {
+  Form,
+  Link,
+  redirect,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import userServises from "../APIs/users";
+import useAuth from "../hooks/useAuth";
+import { useState } from "react";
+//context
+//submitting form
+// export const action =
+//   (setAuth) =>
+//   async ({ request, params }) => {
+//     const formData = await request.formData();
+//     const update = Object.fromEntries(formData);
+//     const login = await userServises.logIn(update);
+//     console.log("login: ", login);
+//     setAuth(login);
+//     return redirect("/user");
+//   };
 
-export async function action({ request, params }) {
-  console.log("odpala?");
-  const formData = await request.formData();
-  const update = Object.fromEntries(formData);
-  console.log(update);
-  return redirect("/");
-}
 function SignIn() {
-  const navigation = useNavigation();
-  console.log(navigation.state);
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.pathname || "/";
+
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await userServises.logIn({ login, password });
+      const accessToken = response.token;
+      setAuth({ user: response.user, token: accessToken });
+      setLogin("");
+      setPassword("");
+      navigate(`/user`);
+    } catch (error) {
+      setErrMsg("Login failed");
+      console.log(error);
+    }
+  };
+
   return (
     <article
       className={`br3 ba shadow-5 b--black-20 mv4 w-100 w-50-m w-25-l mw center fade-in`}
     >
       <main className="pa4 black-80">
-        <Form method="post" className="measure">
+        <form className="measure" onSubmit={handleSubmit}>
           <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
             <legend className="f2 fw6 ph0 mh0">Sign In</legend>
             <div className="mt3">
-              <label className="db fw6 lh-copy f6" htmlFor="email-address">
-                Email
+              <label className="db fw6 lh-copy f6" htmlFor="login">
+                Login
               </label>
               <input
                 className="pa2 input-reset ba b--black bg-transparent hover-white w-100"
-                type="email"
-                name="email-address"
-                id="email-address"
+                type="text"
+                name="login"
+                autoComplete="off"
+                id="login"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                required
               />
             </div>
             <div className="mv3">
@@ -39,6 +78,9 @@ function SignIn() {
                 type="password"
                 name="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
           </fieldset>
@@ -58,7 +100,7 @@ function SignIn() {
               <span className="black fw5">Register</span>
             </Link>
           </div>
-        </Form>
+        </form>
       </main>
     </article>
   );

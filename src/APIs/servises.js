@@ -1,19 +1,23 @@
-import axios from "axios";
-const url = "/api/data";
 import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
 import * as servises from "./weatherAPI.js";
-// import { useWeatherApi } from "./weatherAPI";
-
-const getAllLocation = async (query) => {
+const url = "/api/data";
+// import axios from "./axios.js";
+const getAllLocation = async (query, signal, privateAxios) => {
   try {
-    const response = await axios.get(url);
+    console.log(privateAxios.config);
+    const response = await privateAxios.get(url, { signal: signal });
+    console.log("api response: ", response);
     const fetchData = response.data.map((weather) =>
-      updateLocation(weather.id, {
-        city: weather.city,
-        lat: weather.lat?.toString(),
-        lon: weather.lon?.toString(),
-      })
+      updateLocation(
+        weather._id.toString(),
+        {
+          city: weather.location.city,
+          lat: weather.location.lat,
+          lon: weather.location.lon,
+        },
+        privateAxios
+      )
     );
     let allData = await Promise.all(fetchData);
     console.log("sprawdzam dane", response);
@@ -38,38 +42,41 @@ const getDownloadData = async () => {
   }
 };
 
-const getOneLocation = async (id) => {
+const getOneLocation = async (id, signal, privateAxios) => {
   try {
-    const response = await axios.get(`${url}/${id}`);
-    // console.log("getOne: ", response);
+    const response = await privateAxios.get(`${url}/${id}`, { signal: signal });
     return response.data;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-const createLocation = async () => {
+const createLocation = async (privateAxios) => {
   try {
-    const response = await axios.post(url);
+    const response = await privateAxios.post(url);
+    console.log("co ty zwracasz");
     return response.data;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-const updateLocation = async (id, updatedLocation) => {
+const updateLocation = async (id, updatedLocation, privateAxios) => {
   try {
     const callWeather = await servises.useWeatherApi(updatedLocation);
-    const updatedForm = { city: updatedLocation.city, ...callWeather };
-    const response = await axios.put(`${url}/${id}`, updatedForm);
+    const updatedForm = {
+      location: { city: updatedLocation.city, ...callWeather },
+    };
+    const response = await privateAxios.put(`${url}/${id}`, updatedForm);
+    console.log("update: ", response.data);
     return response.data;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
-const deleteLocation = (id) => {
-  return axios.delete(`${url}/${id}`);
+const deleteLocation = (id, privateAxios) => {
+  return privateAxios.delete(`${url}/${id}`);
 };
 export default {
   getAllLocation,

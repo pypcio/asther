@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const useWeatherApi = async (updates) => {
-  const { city, lat, lon } = updates;
+  const { lat, lon } = updates;
   // console.log("miasto, dlugosc,szerokosc", typeof city, typeof lat, lon);
   //   console.log("dlugosc,szerokosc: ", lat, lon);
   const units = "metric";
@@ -9,12 +9,7 @@ export const useWeatherApi = async (updates) => {
   const apiKey = import.meta.env.VITE_REACT_APP_OPEN_WEATHER_API_KEY;
   //   const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
   //   console.log((lat && lon) !== "");
-  if (
-    typeof lat === "string" &&
-    typeof lon === "string" &&
-    lat.length > 0 &&
-    lon.length > 0
-  ) {
+  if (lat && lon) {
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&lang=${lang}&units=${units}&appid=${apiKey}`
     );

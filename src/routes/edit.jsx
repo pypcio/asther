@@ -2,8 +2,10 @@ import {
   Form,
   redirect,
   useLoaderData,
+  useLocation,
   useNavigate,
   useNavigation,
+  useParams,
 } from "react-router-dom";
 import {
   faCheck,
@@ -13,7 +15,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //API
 import { getWeather, updateWeather } from "../APIs/dataAPI";
-import servises from "../APIs/servises";
+import servises from "../APIs/servises.js";
 import {
   isValidCity,
   isValidLatitude,
@@ -21,40 +23,73 @@ import {
 } from "../APIs/functions";
 import { useEffect, useState, useRef } from "react";
 import { geocodingGoogleApi } from "../APIs/weatherAPI";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+// import { axiosPrivate } from "../APIs/axios";
+import useAuth from "../hooks/useAuth";
+import axios from "axios";
+// export async function action({ request, params }) {
+//   const formData = await request.formData();
+//   const update = Object.fromEntries(formData);
+//   console.log("update: ", update);
+//   await servises.updateLocation(params.weatherId, update);
+//   return redirect(`/weathers/${params.weatherId}`);
+// }
 
-export async function action({ request, params }) {
-  const formData = await request.formData();
-  const update = Object.fromEntries(formData);
-  console.log("update: ", update);
-  await servises.updateLocation(params.weatherId, update);
-  return redirect(`/weathers/${params.weatherId}`);
-}
-
-export async function loader({ params }) {
-  const weather = await servises.getOneLocation(params.weatherId);
-  return { weather };
-}
+// export async function loader({ params }) {
+//   const weather = await servises.getOneLocation(params.weatherId);
+//   return { weather };
+// }
 function EditWeatherRoot() {
-  const { weather } = useLoaderData();
+  // const { weather } = useLoaderData();
+  const privateAxios = useAxiosPrivate();
+  // const {auth}=useAuth();
+  const location = useLocation;
+  const [weather, setWeather] = useState(null);
   const navigate = useNavigate();
   const userRef = useRef();
   const errRef = useRef();
+  const { weatherId } = useParams();
   //location
-  const [city, setCity] = useState(weather.city);
+  const [city, setCity] = useState(weather?.location.city || "");
   const [validCity, setValidCity] = useState(false);
   const [cityFocus, setCityFocus] = useState(false);
   //lattitude
-  const [lat, setLat] = useState(`${weather.lat || ""}`);
+  const [lat, setLat] = useState(`${weather?.location.lat || ""}`);
   const [validLat, setValidLat] = useState(false);
   const [latFocus, setLatFocus] = useState(false);
   //longitude
-  const [lon, setLon] = useState(`${weather.lon || ""}`);
+  const [lon, setLon] = useState(`${weather?.location.lon || ""}`);
   const [validLon, setValidLon] = useState(false);
   const [lonFocus, setLonFocus] = useState(false);
   //error message
   const [errMsg, setErrMsg] = useState(false);
   const [success, setSuccess] = useState(false);
   const [disable, setDisable] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const getUserData = async () => {
+      try {
+        const id = weatherId;
+        const response = await servises.getOneLocation(
+          id,
+          controller.signal,
+          privateAxios
+        );
+        console.log("response: ", response);
+        isMounted && setWeather(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserData();
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
   useEffect(() => {
     userRef.current.focus();
   }, []);
@@ -88,10 +123,27 @@ function EditWeatherRoot() {
   useEffect(() => {
     setErrMsg("");
   }, [city, lat, lon]);
+
+  const handleEditLocation = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosPrivate.put(
+        weatherId,
+        { city, lat, lon },
+        axiosPrivate
+      );
+      // console.log("update:", response);
+      navigate(`user/${weatherId}`);
+    } catch (error) {
+      setErrMsg("failed to fetch data");
+      console.log(error);
+    }
+  };
+
   return (
     <div id="edit-root">
       <section id="edit-form">
-        <Form method="post" id="data-form">
+        <form onSubmit={handleEditLocation} id="data-form">
           <div>
             <label>Miejscowosc:</label>
             <p id="city">
@@ -229,7 +281,7 @@ function EditWeatherRoot() {
               Cancel
             </button>
           </p>
-        </Form>
+        </form>
       </section>
     </div>
   );

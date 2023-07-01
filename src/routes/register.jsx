@@ -1,12 +1,13 @@
 import React from "react";
 import { Form, redirect } from "react-router-dom";
+import userServises from "../APIs/users";
 
 export async function action({ request, params }) {
-  console.log("odpala?");
   const formData = await request.formData();
   const update = Object.fromEntries(formData);
-  console.log(update);
-  return redirect("/");
+  const register = await userServises.register(update);
+  console.log("register", register);
+  return redirect("/signIn");
 }
 function Register() {
   return (
@@ -17,25 +18,25 @@ function Register() {
             <legend className="f2 fw6 ph0 mh0">Register</legend>
 
             <div className="mt3 ">
-              <label className="db fw6 lh-copy f6" htmlFor="first-name">
+              <label className="db fw6 lh-copy f6" htmlFor="login">
                 First Name
               </label>
               <input
                 className="pa2 input-reset ba b--black bg-transparent hover-bg-light-blue hover-white w-100"
                 type="text"
-                name="first-name"
-                id="first-name"
+                name="login"
+                id="login"
               />
             </div>
             <div className="mt3">
-              <label className="db fw6 lh-copy f6" htmlFor="email-address">
+              <label className="db fw6 lh-copy f6" htmlFor="email">
                 Email
               </label>
               <input
                 className="pa2 input-reset ba b--black bg-transparent hover-bg-light-blue hover-white w-100"
                 type="email"
-                name="email-address"
-                id="email-address"
+                name="email"
+                id="email"
               />
             </div>
             <div className="mv3">
