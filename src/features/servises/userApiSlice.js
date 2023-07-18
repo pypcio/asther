@@ -1,0 +1,53 @@
+import { apiSlice } from "../../APIs/apiSlice";
+export const userApiSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    getAllUserData: builder.query({
+      query: () => ({
+        url: "/api/data",
+      }),
+      providesTags: (result, error, arg) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Location", id })), "Location"]
+          : ["Location"],
+    }),
+    getUserData: builder.query({
+      query: (weatherId) => ({
+        url: `/api/data/${weatherId}`,
+      }),
+      providesTags: ["Location"],
+    }),
+    createUserData: builder.mutation({
+      query: () => ({
+        url: `/api/data`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Location"],
+    }),
+    deleteUserData: builder.mutation({
+      query: (weatherId) => ({
+        url: `/api/data/${weatherId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Location"],
+    }),
+    updateUserData: builder.mutation({
+      query: ([id, update]) => (
+        console.log("id", id, "updatedForm", update),
+        {
+          url: `/api/data/${id}`,
+          method: "PUT",
+          body: update,
+        }
+      ),
+      invalidatesTags: ["Location"],
+    }),
+  }),
+});
+
+export const {
+  useGetAllUserDataQuery,
+  useGetUserDataQuery,
+  useCreateUserDataMutation,
+  useDeleteUserDataMutation,
+  useUpdateUserDataMutation,
+} = userApiSlice;

@@ -1,25 +1,31 @@
-import { Form, Link, useLoaderData } from "react-router-dom";
-import { getWeather } from "../APIs/dataAPI";
+import { Link, useParams } from "react-router-dom";
+// import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection } from "../APIs/functions";
-import DownloadButton from "../components/DownloadButton";
-import { useState } from "react";
-import servises from "../APIs/servises";
+// import DownloadButton from "../components/DownloadButton";
+import { useGetUserDataQuery } from "../features/servises/userApiSlice";
+// import servises from "../APIs/servises";
 
-export async function loader({ params }) {
-  const weather = await servises.getOneLocation(params.weatherId);
-  return weather;
-}
+// export async function loader({ params }) {
+//   const weather = await servises.getOneLocation(params.weatherId);
+//   return weather;
+// }
 export default function CurrentWeather() {
-  const { current, timezone_offset } = useLoaderData();
+  // const { current, timezone_offset } = useLoaderData();
   // const [showModal, setShowModal] = useState(false);
   // const handleModal = () => {
   //   setShowModal(!showModal);
   // };
+  const { weatherId } = useParams();
+  const { data: oneLocation, isLoading } = useGetUserDataQuery(weatherId, {
+    skip: !weatherId, // Skip the query if weatherId is not available
+    refetchOnMountOrArgChange: true,
+  });
+  const { current, timezone_offset } = oneLocation.location;
   console.log("lokacja", current);
   return (
     <>
       {/* <DownloadButton id={id} showModal={showModal} handleModal={handleModal} /> */}
-      {Object.keys(current).length !== 1 ? (
+      {!isLoading && current.weather.length !== 0 ? (
         <div className="w-table">
           <ul>
             <li>{`${new Date(

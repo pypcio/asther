@@ -5,28 +5,26 @@ import {
   Route,
 } from "react-router-dom";
 //routes
-import Root, {
-  loader as rootLoader,
-  action as rootAction,
-} from "./routes/root.jsx";
+import Root, { loader as rootLoader } from "./routes/root.jsx";
 import ErrorPage from "./routes/errorPage";
 import WeatherRoot from "./routes/weatherRoot";
 import CurrentWeather from "./routes/currentWeather";
 import HourlyWeather from "./routes/hourlyWeather";
 import DailyWeather from "./routes/dailyWeather";
 import EditWeatherRoot from "./routes/edit";
-import { action as deleteAction } from "./routes/delete";
+// import { action as deleteAction } from "./routes/delete";
 import Index from "./routes";
 import SignIn from "./routes/signIn.jsx";
 import Register, { action as registerAction } from "./routes/register.jsx";
 //components
 import Layout from "./components/layout.jsx";
-import Home from "./routes/home.jsx";
 import RequireAuth from "./routes/requireAuth.jsx";
-import useAxiosPrivate from "./hooks/useAxiosPrivate.js";
-import useAuth from "./hooks/useAuth.js";
-
-//@ zamienic root loader na useEffect() hook
+import Welcome from "./routes/Welcome.jsx";
+// import User from "./routes/user.jsx";
+// import Home from "./routes/home.jsx";
+// import RequireAuth from "./routes/requireAuth.jsx";
+// import useAxiosPrivate from "./hooks/useAxiosPrivate.js";
+// import useAuth from "./hooks/useAuth.js";
 
 function App() {
   // const [auth, setAuth] = useAuth();
@@ -47,11 +45,13 @@ function App() {
           />
         </Route>
         <Route element={<RequireAuth />}>
+          <Route path="welcome" element={<Welcome />} />
+          {/* <Route path="user" element={<User />} /> */}
           <Route
             path="user"
             element={<Root />}
             loader={rootLoader}
-            action={rootAction}
+            // action={rootAction}
           >
             <Route errorElement={<ErrorPage />}>
               <Route index element={<Index />} />
@@ -62,7 +62,6 @@ function App() {
               >
                 <Route
                   index
-                  // path="weathers/:weatherId/current"
                   element={<CurrentWeather />}
                   // loader={currentWeatherLoader}
                 />
@@ -85,7 +84,7 @@ function App() {
               />
               <Route
                 path="weathers/:weatherId/delete"
-                action={deleteAction}
+                // action={deleteAction}
                 errorElement={<ErrorPage />}
               />
             </Route>

@@ -21,20 +21,24 @@ import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal } from "@mui/material";
 import DownloadButton from "../components/downloadButton.jsx";
-import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
+import {
+  useCreateUserDataMutation,
+  useGetAllUserDataQuery,
+} from "../features/servises/userApiSlice.js";
+// import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 //
 
-export async function action({ request }) {
-  const formData = await request.formData();
-  let intent = formData.get("intent");
-  if (intent === "add") {
-    const weather = await servises.createLocation();
-    return redirect(`/weathers/${weather.id}/edit`);
-  }
-  if (intent === "delete") {
-    //nie potrzebne
-  }
-}
+// export async function action({ request }) {
+//   const formData = await request.formData();
+//   let intent = formData.get("intent");
+//   if (intent === "add") {
+//     const weather = await servises.createLocation();
+//     return redirect(`/weathers/${weather.id}/edit`);
+//   }
+//   if (intent === "delete") {
+//     //nie potrzebne
+//   }
+// }
 // export const loader =async ({ request }) => {
 //     const url = new URL(request.url);
 //     const q = url.searchParams.get("q");
@@ -50,43 +54,29 @@ export const loader = async ({ request }) => {
 };
 
 export default function Root() {
-  const [weathers, setWeathers] = useState([]);
-  const privateAxios = useAxiosPrivate();
+  // const [weathers, setWeathers] = useState([]);
   const { q } = useLoaderData();
+  const {
+    data: weathers,
+    isSuccess,
+    isFetching,
+  } = useGetAllUserDataQuery({
+    refetchOnMountOrArgChange: true,
+  });
+  const [createUserData] = useCreateUserDataMutation();
   const [open, setOpen] = useState(false);
   const dialogRefs = useRef([]);
   const navigation = useNavigation();
   const submit = useSubmit();
   const navigate = useNavigate();
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-    const getUserData = async () => {
-      try {
-        const response = await servises.getAllLocation(
-          q,
-          controller.signal,
-          privateAxios
-        );
-        console.log("response: ", response.length);
-        isMounted && setWeathers(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUserData();
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
+  console.log("dane:", weathers);
   useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
 
   useEffect(() => {
     let handlers = [];
-    if (weathers) {
+    if (!isFetching) {
       weathers.forEach((_, index) => {
         const handler = (e) => {
           // console.log(dialogRefs.current[index].contains(e.target));
@@ -111,15 +101,14 @@ export default function Root() {
         document.removeEventListener("mousedown", handler);
       });
     };
-  }, [weathers.length]);
+  }, [isFetching]);
 
   const handleNewLocation = async (e) => {
     e.preventDefault();
     try {
-      const response = await servises.createLocation(privateAxios);
-      console.log("root response: ", response);
-      const id = response._id.toString();
-      navigate(`/user/weathers/${id}/edit`);
+      const response = await createUserData().unwrap();
+      console.log("nowa lokacja: ", response);
+      navigate(`weathers/${response._id.toString()}/edit`);
     } catch (error) {
       console.log(error);
     }
@@ -136,8 +125,6 @@ export default function Root() {
   const handleDialog = (index) => {
     dialogRefs.current[index]?.show();
   };
-  const location = useLocation();
-  console.log("location ", location.pathname);
   return (
     <div id="wrap-app">
       <div id="application">
@@ -151,7 +138,7 @@ export default function Root() {
           </footer>
           {/* <h1>Asther</h1> */}
           <div>
-            <Form id="search-form" role="search">
+            <form id="search-form" role="search">
               <input
                 id="q"
                 className={searching ? "loading" : ""}
@@ -170,15 +157,15 @@ export default function Root() {
               />
               <div id="search-spinner" aria-hidden hidden={!searching} />
               <div className="sr-only" aria-live="polite"></div>
-            </Form>
-            <form onSubmit={handleNewLocation}>
+            </form>
+            <Form onSubmit={handleNewLocation}>
               <button type="submit" name="intent" value="add">
                 New
               </button>
-            </form>
+            </Form>
           </div>
           <nav>
-            {weathers !== null ? (
+            {isSuccess ? (
               <ul>
                 {weathers.map((weather, index) => (
                   <li key={weather._id.toString()}>
@@ -195,7 +182,6 @@ export default function Root() {
                       )}
                       {}
                     </NavLink>
-                    {/* tutaj ma byc html dialog  */}
                     <div
                       className="drop-menu-button"
                       onClick={() => handleDialog(index)}

@@ -5,9 +5,11 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import userServises from "../APIs/users";
-import useAuth from "../hooks/useAuth";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/authSlice";
+import { useLoginMutation } from "../APIs/authApiSlice";
+
 //context
 //submitting form
 // export const action =
@@ -22,30 +24,29 @@ import { useState } from "react";
 //   };
 
 function SignIn() {
-  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location?.state?.pathname || "/";
-
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
+  const [data, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userServises.logIn({ login, password });
-      const accessToken = response.token;
-      setAuth({ user: response.user, token: accessToken });
+      const userData = await data({ login, password }).unwrap();
+      dispatch(setCredentials({ ...userData, login }));
       setLogin("");
       setPassword("");
-      navigate(`/user`);
+      console.log("co to jest: ", userData);
+      navigate("/user");
     } catch (error) {
-      setErrMsg("Login failed");
       console.log(error);
     }
   };
-
+  console.log("loading...", isLoading);
   return (
     <article
       className={`br3 ba shadow-5 b--black-20 mv4 w-100 w-50-m w-25-l mw center fade-in`}

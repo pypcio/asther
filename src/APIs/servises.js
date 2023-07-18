@@ -1,7 +1,7 @@
 import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
 import * as servises from "./weatherAPI.js";
-const url = "/api/data";
+// const url = "/api/data";
 // import axios from "./axios.js";
 const getAllLocation = async (query, signal, privateAxios) => {
   try {

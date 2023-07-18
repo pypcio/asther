@@ -1,12 +1,4 @@
-import {
-  Form,
-  redirect,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-  useNavigation,
-  useParams,
-} from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router-dom";
 import {
   faCheck,
   faTimes,
@@ -14,8 +6,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //API
-import { getWeather, updateWeather } from "../APIs/dataAPI";
-import servises from "../APIs/servises.js";
 import {
   isValidCity,
   isValidLatitude,
@@ -23,10 +13,11 @@ import {
 } from "../APIs/functions";
 import { useEffect, useState, useRef } from "react";
 import { geocodingGoogleApi } from "../APIs/weatherAPI";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-// import { axiosPrivate } from "../APIs/axios";
-import useAuth from "../hooks/useAuth";
-import axios from "axios";
+import {
+  useGetUserDataQuery,
+  useUpdateUserDataMutation,
+} from "../features/servises/userApiSlice";
+import * as servises from "../APIs/weatherAPI";
 // export async function action({ request, params }) {
 //   const formData = await request.formData();
 //   const update = Object.fromEntries(formData);
@@ -40,15 +31,14 @@ import axios from "axios";
 //   return { weather };
 // }
 function EditWeatherRoot() {
-  // const { weather } = useLoaderData();
-  const privateAxios = useAxiosPrivate();
-  // const {auth}=useAuth();
-  const location = useLocation;
-  const [weather, setWeather] = useState(null);
+  const { weatherId } = useParams();
+  console.log("editId: ", weatherId);
+  const { data: weather } = useGetUserDataQuery(weatherId, {
+    skip: !weatherId, // Skip the query if weatherId is not available
+  });
+  const [updateUserData] = useUpdateUserDataMutation();
   const navigate = useNavigate();
   const userRef = useRef();
-  const errRef = useRef();
-  const { weatherId } = useParams();
   //location
   const [city, setCity] = useState(weather?.location.city || "");
   const [validCity, setValidCity] = useState(false);
@@ -63,32 +53,7 @@ function EditWeatherRoot() {
   const [lonFocus, setLonFocus] = useState(false);
   //error message
   const [errMsg, setErrMsg] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [disable, setDisable] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-    const getUserData = async () => {
-      try {
-        const id = weatherId;
-        const response = await servises.getOneLocation(
-          id,
-          controller.signal,
-          privateAxios
-        );
-        console.log("response: ", response);
-        isMounted && setWeather(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUserData();
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, []);
 
   useEffect(() => {
     userRef.current.focus();
@@ -127,17 +92,17 @@ function EditWeatherRoot() {
   const handleEditLocation = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosPrivate.put(
+      const updateWeather = await servises.useWeatherApi({ lat, lon });
+      const updateLocation = updateUserData([
         weatherId,
-        { city, lat, lon },
-        axiosPrivate
-      );
-      // console.log("update:", response);
-      navigate(`user/${weatherId}`);
+        { city, ...updateWeather },
+      ]).unwrap();
+      console.log("update:", updateLocation);
     } catch (error) {
       setErrMsg("failed to fetch data");
       console.log(error);
     }
+    navigate(`/user/weathers/${weatherId}`, { replace: true });
   };
 
   return (

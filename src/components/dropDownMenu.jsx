@@ -6,21 +6,20 @@ import { Link } from "react-router-dom";
 // import { BiMenu } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { useState } from "react";
+// import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useDeleteUserDataMutation } from "../features/servises/userApiSlice";
 // import { HiOutlineMenuAlt4 } from "react-icons/hi";
 // import { BsThreeDots } from "react-icons/bs";
 
 function DropDownMenu({ id }) {
-  const privateAxios = useAxiosPrivate();
-  const [deleting, setDelete] = useState({ a: 1 });
+  // console.log("nowe id", id);
+  const [deleteUserData] = useDeleteUserDataMutation();
   const handleDeleteLocation = async (e) => {
     e.preventDefault();
     try {
-      const response = await privateAxios.delete(`/api/data/${id}`);
-      console.log("delete:", response);
+      const response = await deleteUserData(id);
     } catch (error) {
-      console.log(error);
+      console.log("nie udalo sie usunac", error);
     }
   };
   // console.log("pokaz mi Id: ", id);
