@@ -1,22 +1,28 @@
-import { Link, useLoaderData, useNavigation } from "react-router-dom";
-import { getWeather } from "../APIs/dataAPI";
+import { Link, useNavigation, useParams } from "react-router-dom";
+// import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
-import servises from "../APIs/servises";
-export async function loader({ params }) {
-  // console.log("twoje id: ", params.weatherId);
-  const weather = await servises.getOneLocation(params.weatherId);
-  // console.log(weather);
-  return weather;
-}
+// import servises from "../APIs/servises";
+import { useGetUserDataQuery } from "../features/servises/userApiSlice";
+// export async function loader({ params }) {
+//   // console.log("twoje id: ", params.weatherId);
+//   const weather = await servises.getOneLocation(params.weatherId);
+//   // console.log(weather);
+//   return weather;
+// }
 export default function DailyWeather() {
-  const { daily, timezone_offset } = useLoaderData();
+  const { weatherId } = useParams();
+  const { data: oneLocation, isLoading } = useGetUserDataQuery(weatherId, {
+    skip: !weatherId, // Skip the query if weatherId is not available
+    refetchOnMountOrArgChange: true,
+  });
+  const { daily, timezone_offset } = oneLocation?.location ?? {};
   const navigation = useNavigation();
   // console.log(daily);
   // console.log("location: ", navigation.location);
   // console.log("state: ", navigation.state);
   return (
     <>
-      {Object.keys(daily).length !== 1 ? (
+      {!isLoading && daily[0].weather.length !== 0 ? (
         daily.map((day) => {
           // console.log("each day: ", day.temp);
           const date = day?.dt

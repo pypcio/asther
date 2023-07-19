@@ -102,7 +102,7 @@ function EditWeatherRoot() {
       setErrMsg("failed to fetch data");
       console.log(error);
     }
-    navigate(`/user/weathers/${weatherId}`, { replace: true });
+    navigate(`/user/${weatherId}`, { replace: true });
   };
 
   return (

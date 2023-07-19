@@ -43,6 +43,7 @@ function App() {
             element={<Register />}
             action={registerAction}
           />
+          <Route path="welcome" element={<Welcome />} />
         </Route>
         <Route element={<RequireAuth />}>
           <Route path="welcome" element={<Welcome />} />
@@ -56,7 +57,7 @@ function App() {
             <Route errorElement={<ErrorPage />}>
               <Route index element={<Index />} />
               <Route
-                path="weathers/:weatherId"
+                path=":weatherId"
                 element={<WeatherRoot />}
                 // loader={weatherRootLoader}
               >
@@ -65,25 +66,17 @@ function App() {
                   element={<CurrentWeather />}
                   // loader={currentWeatherLoader}
                 />
-                <Route
-                  path="weathers/:weatherId/hourly"
-                  element={<HourlyWeather />}
-                  // loader={hourlyWeatherLoader}
-                />
-                <Route
-                  path="weathers/:weatherId/daily"
-                  element={<DailyWeather />}
-                  // loader={dailyWeatherLoader}
-                />
+                <Route path="hourly" element={<HourlyWeather />} />
+                <Route path="daily" element={<DailyWeather />} />
               </Route>
               <Route
-                path="weathers/:weatherId/edit"
+                path=":weatherId/edit"
                 element={<EditWeatherRoot />}
                 // loader={editWeatherLoader}
                 // action={editWeatherRootAction}
               />
               <Route
-                path="weathers/:weatherId/delete"
+                path=":weatherId/delete"
                 // action={deleteAction}
                 errorElement={<ErrorPage />}
               />

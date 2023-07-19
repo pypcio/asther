@@ -27,7 +27,7 @@ function DropDownMenu({ id }) {
     <div className="dropdown">
       <ul>
         <li>
-          <Link to={`weathers/${id}/edit`}>
+          <Link to={`${id}/edit`}>
             <AiOutlineEdit /> <span>Edit</span>
           </Link>
         </li>

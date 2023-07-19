@@ -123,8 +123,8 @@ form[action$="delete"] button {
   top: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.9;
-  background-image: url("../assets/nowe_tlo.jpg");
+  opacity: 0.85;
+  background-image: url("../assets//landing-page-v2.jpg");
   background-repeat: no-repeat;
   background-position: 50% 32%;
   background-size: cover;
@@ -332,6 +332,7 @@ i {
   flex: 1;
   /* padding: 1rem 2rem; */
   width: 30rem;
+  height: 100%;
   /* background-color: hsl(210, 20%, 95%); */
 }
 #detail h1 {
@@ -633,7 +634,6 @@ button {
   justify-content: center;
   width: 100%;
 }
-
 #weather {
   display: flex;
   flex-direction: column;
@@ -641,7 +641,6 @@ button {
   border-bottom: 2px solid hsl(0, 0%, 89%);
   background-color: #f7f7f7;
 }
-
 #detail > div {
   display: flex;
   flex-direction: column;
@@ -656,9 +655,10 @@ button {
   /* color: #12073b; */
   opacity: 0.8;
   justify-content: space-between;
-  margin-right: 2rem;
-  margin-left: 2rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
   margin-top: 0.5rem;
+  /* background-color: hsl(210, 21%, 90%); */
   /* margin-bottom: 1.6rem; */
 }
 #weather > :first-child :nth-child(2) {
@@ -695,6 +695,7 @@ button {
 #linki-pogodowe {
   height: auto;
   margin-left: 1rem;
+  margin-top: 0.77rem;
   /* background-color: hsl(0, 0%, 89%); */
 }
 #linki-pogodowe p {
@@ -702,8 +703,8 @@ button {
   margin-top: 1rem;
 }
 #linki-pogodowe p a {
-  padding-top: 0.59rem;
-  padding-bottom: 0.59rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   font-size: 1rem;
 }
 #weather a:hover {
@@ -722,15 +723,79 @@ button {
 #weather-template > div {
   scroll-snap-align: start;
 } */
+#detail-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+#mainDisplay {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
 #weather-template {
   display: flex;
-  margin-bottom: 0;
+  flex-direction: column;
   flex: 1;
+  /* order: 1; */
+  margin: 0;
   overflow: auto;
-}
-#weather-template > div:nth-child(2n + 1) {
   background-color: hsl(210, 21%, 90%);
 }
+.data-parent {
+  display: flex;
+  flex-direction: column;
+  /* flex: 1; */
+  height: 100%;
+}
+.data-parent > div:nth-child(n + 1) {
+  background-color: #f7f7f7;
+}
+.data-parent > div:nth-child(2n + 1) {
+  background-color: hsl(210, 21%, 90%);
+}
+#data-current {
+  flex: 1;
+  background-color: #f7f7f7;
+}
+.data-display {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 0.6fr 1.1fr 0.6fr 0.9fr 0.6fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  padding: 2rem 2rem 2rem 2rem;
+}
+.data-display > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+.data-display div:nth-child(1) p,
+.data-display div:nth-child(3) p {
+  font-size: 1.5rem;
+}
+.data-display p {
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  margin: 5px;
+}
+.data-display div:nth-child(1n + 4) p {
+  justify-content: flex-start;
+}
+.data-display div:nth-child(2n + 4) p {
+  font-weight: 500;
+}
+.data-display p img {
+  min-width: 70px;
+  width: 100%;
+  height: auto;
+}
+
 .edit-option {
   display: flex;
   align-items: center;

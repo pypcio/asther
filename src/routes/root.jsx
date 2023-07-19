@@ -108,7 +108,7 @@ export default function Root() {
     try {
       const response = await createUserData().unwrap();
       console.log("nowa lokacja: ", response);
-      navigate(`weathers/${response._id.toString()}/edit`);
+      navigate(`${response._id.toString()}/edit`);
     } catch (error) {
       console.log(error);
     }
@@ -170,7 +170,7 @@ export default function Root() {
                 {weathers.map((weather, index) => (
                   <li key={weather._id.toString()}>
                     <NavLink
-                      to={`/user/weathers/${weather._id.toString()}`}
+                      to={`${weather._id.toString()}`}
                       className={({ isActive, isPending }) =>
                         isActive ? " active" : isPending ? " pending" : ""
                       }

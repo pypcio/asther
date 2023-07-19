@@ -18,19 +18,19 @@ export default function WeatherRoot() {
   const [currentFocus, setCurrentFocus] = useState(false);
   console.log("weatherRoot: ", weather);
   useEffect(() => {
-    location.pathname === `/user/weathers/${weatherId}`
+    location.pathname === `/user/${weatherId}`
       ? setCurrentFocus(true)
       : setCurrentFocus(false);
   }, [location.pathname]);
   return (
-    <main>
+    <main id="detail-main">
       {!isLoading ? (
-        <section>
+        <section id="mainDisplay">
           <div id="weather">
             <div>
-              <Link to={`edit`}>
+              <NavLink to={`edit`}>
                 <h3>{weather.location.city || `City`}</h3>
-              </Link>
+              </NavLink>
               <h4>
                 {convertedDate(
                   weather.location.current.dt + weather.location.timezone_offset
@@ -42,22 +42,15 @@ export default function WeatherRoot() {
             </div>
             <div id="linki-pogodowe">
               <p>
-                <Link
-                  className={currentFocus ? "active" : ""}
-                  to={`/user/weathers/${weather._id}` || "/"}
-                >
+                <Link className={currentFocus ? "active" : ""} to={""}>
                   Current
                 </Link>
               </p>
               <p>
-                <NavLink to={`/user/weathers/${weather._id}/hourly` || "/"}>
-                  Hourly
-                </NavLink>
+                <NavLink to={`hourly`}>Hourly</NavLink>
               </p>
               <p>
-                <NavLink to={`/user/weathers/${weather._id}/daily` || "/"}>
-                  Daily
-                </NavLink>
+                <NavLink to={`daily`}>Daily</NavLink>
               </p>
             </div>
           </div>

@@ -1,18 +1,25 @@
-import { Link, useLoaderData } from "react-router-dom";
-import { getWeather } from "../APIs/dataAPI";
+import { Link, useLoaderData, useParams } from "react-router-dom";
+// import { getWeather } from "../APIs/dataAPI";
 import { convertWindDegreeToDirection, convertedDate } from "../APIs/functions";
-import servises from "../APIs/servises";
-export async function loader({ params }) {
-  // console.log("twoje id: ", params.weatherId);
-  const weather = await servises.getOneLocation(params.weatherId);
-  return weather;
-}
+import { useGetUserDataQuery } from "../features/servises/userApiSlice";
+// import servises from "../APIs/servises";
+// export async function loader({ params }) {
+//   // console.log("twoje id: ", params.weatherId);
+//   const weather = await servises.getOneLocation(params.weatherId);
+//   return weather;
+// }
 export default function HourlyWeather() {
-  const { hourly, timezone_offset } = useLoaderData();
+  // const { hourly, timezone_offset } = useLoaderData();
   // console.log("godzinowa: ", hourly.length);
+  const { weatherId } = useParams();
+  const { data: oneLocation, isLoading } = useGetUserDataQuery(weatherId, {
+    skip: !weatherId, // Skip the query if weatherId is not available
+    refetchOnMountOrArgChange: true,
+  });
+  const { hourly, timezone_offset } = oneLocation?.location ?? {};
   return (
-    <>
-      {hourly.length !== 0 ? (
+    <div className="data-parent">
+      {!isLoading && hourly[0].weather.length !== 0 ? (
         hourly.map((hour, index) => {
           // console.log("sprawdzam", new Date(hour.dt * 1000));
           return (
@@ -31,51 +38,60 @@ export default function HourlyWeather() {
               ) : (
                 ""
               )}
-              <div className="w-table hourly">
-                <ul>
-                  <li>{`${new Date((hour.dt + timezone_offset) * 1000)
-                    .getUTCHours()
+              <div className="data-display">
+                <div>
+                  <p>{`${new Date(
+                    (hour.dt + timezone_offset) * 1000
+                  ).getUTCHours()}:${new Date(
+                    (hour.dt + timezone_offset) * 1000
+                  )
+                    .getUTCMinutes()
                     .toString()
-                    .padStart(2, "0")}:00`}</li>
-                  <li>
-                    {" "}
-                    <img
-                      src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
-                      alt={`${hour.weather[0].description}`}
-                    />
-                  </li>
-                  <li>{`${hour.temp}°C`}</li>
-                </ul>
-                <ul>
-                  <li>Zachmurzenie</li>
-                  <li>Wilgotnosc</li>
-                  <li>Deszcz</li>
-                </ul>
-                <ul>
-                  <li>{`${hour.clouds}%`}</li>
-                  <li>{`${hour.humidity}%`}</li>
-                  <li>{`${Math.round(hour.pop * 100)}%`}</li>
-                </ul>
-                <ul>
-                  <li>Ciśnienie</li>
-                  <li>Prędkość wiatru</li>
-                  <li>Podmuch wiatru</li>
-                </ul>
-                <ul>
-                  <li>{`${hour.pressure}hPa`}</li>
-                  <li>{`${hour.wind_speed}m/s`}</li>
-                  <li>{`${hour.wind_gust}m/s`}</li>
-                </ul>
-                <ul>
-                  <li>Kierunek wiatru</li>
-                  <li>Indeks UV</li>
-                  <li>Widoczność</li>
-                </ul>
-                <ul>
-                  <li>{convertWindDegreeToDirection(hour.wind_deg)}</li>
-                  <li>{`${hour.uvi} UVI`}</li>
-                  <li>{`${hour.visibility / 1000}km`}</li>
-                </ul>
+                    .padStart(2, "0")}`}</p>
+                </div>
+                <div>
+                  <p>
+                    {hour.weather && (
+                      <img
+                        src={`https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
+                        alt={`${hour.weather[0].description || "-"}`}
+                      />
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>{`${hour.temp || "0"}°C`}</p>
+                </div>
+                <div>
+                  <p>Zachmurzenie</p>
+                  <p>Wilgotnosc</p>
+                  <p>Odczuwalna</p>
+                </div>
+                <div>
+                  <p>{`${hour.clouds || "0"}%`}</p>
+                  <p>{`${hour.humidity || "0"}%`}</p>
+                  <p>{`${hour.feels_like || "0"}°C`}</p>
+                </div>
+                <div>
+                  <p>Kierunek wiatru</p>
+                  <p>Prędkość wiatru</p>
+                  <p>Podmuch wiatru</p>
+                </div>
+                <div>
+                  <p>{convertWindDegreeToDirection(hour.wind_deg)}</p>
+                  <p>{`${hour.wind_speed || "0"}m/s`}</p>
+                  <p>{`${hour.wind_gust || "0"}m/s`}</p>
+                </div>
+                <div>
+                  <p>Ciśnienie</p>
+                  <p>Indeks UV</p>
+                  <p>Widoczność</p>
+                </div>
+                <div>
+                  <p>{`${hour.pressure || "- "}hPa`}</p>
+                  <p>{`${hour.uvi || "0"} UVI`}</p>
+                  <p>{`${hour.visibility / 1000 || "- "}km`}</p>
+                </div>
               </div>
             </div>
           );
@@ -88,6 +104,6 @@ export default function HourlyWeather() {
           </Link>
         </div>
       )}
-    </>
+    </div>
   );
 }
