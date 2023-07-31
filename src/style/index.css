@@ -123,10 +123,10 @@ form[action$="delete"] button {
   top: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.85;
-  background-image: url("../assets//landing-page-v2.jpg");
+  opacity: 0.9;
+  background-image: url("../assets//landing-page-v5.jpg");
   background-repeat: no-repeat;
-  background-position: 50% 32%;
+  background-position: 30% 30%;
   background-size: cover;
 }
 #application {
@@ -266,11 +266,9 @@ form[action$="delete"] button {
 #sidebar nav span {
   font-size: 0.9em;
   /* float: right; */
-  color: #6e6e6d;
+  color: #121212;
 }
-/* #sidebar nad a span::after{
-  content: ;
-} */
+
 #sidebar nav a span:hover {
   cursor: default;
 }
@@ -308,7 +306,6 @@ i {
   overflow: hidden;
   white-space: pre;
   padding: 0.5rem;
-  /* border-radius: 8px; */
   color: inherit;
   text-decoration: none;
   gap: 1rem;
@@ -349,7 +346,6 @@ i {
   line-height: 1;
 }
 #edit-root {
-  position: relative;
   height: 100%;
   width: 100%;
   background-color: hsl(210, 21%, 90%);
@@ -386,6 +382,9 @@ textarea {
 button {
   margin-top: 1rem;
 } */
+#data-form input {
+  line-height: 1.5;
+}
 #data-form label {
   width: 8rem;
 }
@@ -450,7 +449,7 @@ button {
 #edit-form button {
   padding: 0.5rem;
 }
-#edit-form .instructions {
+.instructions {
   font-size: 0.75rem;
   border-radius: 0.5rem;
   background: #5e5e5e;
@@ -466,10 +465,13 @@ button {
 #edit-form .instructions > svg {
   margin-right: 0.5rem;
 }
+.offscreen {
+  position: absolute;
+  display: none;
+}
 #edit-form .offscreen {
   position: absolute;
   display: none;
-  /* left: -9999px; */
 }
 #edit-form .hide {
   display: none;
@@ -634,14 +636,35 @@ button {
   justify-content: center;
   width: 100%;
 }
-#weather {
+#weather,
+#loading-weather-root {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-bottom: 2px solid hsl(0, 0%, 89%);
+  /* border-bottom: 2px solid hsl(0, 0%, 89%); */
   background-color: #f7f7f7;
 }
-#detail > div {
+#loading-weather-root {
+  flex: 1;
+}
+#skeleton-display {
+  padding: 2rem 2rem 0 2rem;
+  flex: 1;
+}
+#skeleton-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+#skeleton-buttons {
+  display: flex;
+  margin: 2rem 0 2rem 0;
+}
+#skeleton-buttons span {
+  margin-right: 1rem;
+}
+#detail #detail-main > div {
   display: flex;
   flex-direction: column;
 }
@@ -651,28 +674,23 @@ button {
   margin-bottom: 0;
 }
 
-#weather > :first-child {
-  /* color: #12073b; */
-  opacity: 0.8;
+#weather > div:first-child {
+  opacity: 0.9;
   justify-content: space-between;
   padding-right: 2rem;
   padding-left: 2rem;
   margin-top: 0.5rem;
-  /* background-color: hsl(210, 21%, 90%); */
-  /* margin-bottom: 1.6rem; */
 }
-#weather > :first-child :nth-child(2) {
+#weather > div:first-child :nth-child(2) {
   margin-left: auto;
-  margin-right: 2rem;
+  margin-right: 1rem;
 }
-#weather > :first-child h3 {
-  /* padding-top: 0.1rem; */
-  /* font-size: 1rem; */
+#weather > div:first-child :nth-child(3) {
+  margin-right: 1rem;
 }
 #weather > div {
   display: flex;
   align-items: center;
-  /* gap: 2em; */
 }
 #weather h1 ~ div {
   display: flex;
@@ -684,6 +702,24 @@ button {
   text-decoration: none;
   padding: 0.5rem;
 }
+#menu-appbar li > * {
+  text-decoration: none;
+  color: #121212;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+#weather div:first-child a:nth-child(2) {
+  margin-right: 1rem;
+}
+#weather div a:last-child > * {
+  height: 2rem;
+  width: 100%;
+}
+#weather div:first-child a:last-child {
+  display: flex;
+  align-items: center;
+}
+
 #weather a.active {
   background: hsl(224, 98%, 58%);
   color: white;
@@ -692,6 +728,7 @@ button {
   margin-left: 2rem;
   margin-bottom: 2rem;
 }
+
 #linki-pogodowe {
   height: auto;
   margin-left: 1rem;
@@ -708,10 +745,7 @@ button {
   font-size: 1rem;
 }
 #weather a:hover {
-  /* display: block; */
   transform: scale(1.1);
-  /* filter: brightness(1.1);
-  background-color: inherit; */
 }
 #weather div > a:hover {
   color: #121212;
@@ -881,6 +915,11 @@ button {
   color: #121212;
   margin-bottom: 1rem;
 }
+#download-div {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
 #download-data {
   position: absolute;
   top: 50%;
@@ -942,6 +981,9 @@ input[type="checkbox"] {
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
 }
+dialog {
+  z-index: 9999;
+}
 #modal-drop-menu {
   /* position: ;
   top: 50%;
@@ -999,8 +1041,6 @@ input[type="checkbox"] {
   background: hsl(0, 0%, 89%);
 }
 #zero-state {
-  /* flex-direction: row !important; */
-
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -1011,8 +1051,7 @@ input[type="checkbox"] {
   /* color: #636363; */
 }
 
-#zero-state a,
-#main-page a {
+.main-page a {
   color: inherit;
   text-decoration: none;
   font-size: 1.5rem;
@@ -1020,9 +1059,18 @@ input[type="checkbox"] {
   font-weight: 500;
   color: #3a3636;
 }
-
-#zero-state a:hover {
-  transform: scale(1.05);
+#detail-index {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.upper-logo {
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.5rem;
+  margin-top: 1.5px;
+  font-weight: 500;
+  color: #3a3636 !important;
 }
 @keyframes fade-in {
   from {
@@ -1037,4 +1085,80 @@ input[type="checkbox"] {
 .fade-in {
   animation-name: fade-in;
   animation-duration: 0.5s; /* Adjust the duration as needed */
+}
+input.error {
+  border: 2px solid rgb(212, 21, 21);
+  font-family: "Roboto", sans-serif;
+  transition: 0.2s ease-in-out;
+}
+input.success {
+  border: 2px solid #3992ff;
+  font-family: "Roboto", sans-serif;
+  transition: 0.2s ease-in-out;
+}
+#login-form .instructions {
+  display: inline-block;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #5e5e5e;
+  color: #fff;
+  padding: 0.5em 1em 0.5em 1em;
+  /* position: relative; */
+  margin: 0.5em 1em 0.5em 1em;
+  bottom: -10px;
+}
+#login-form .instructions p {
+  margin: 0 0.5em 0 0.5em;
+}
+
+#login-form .instructions p svg {
+  padding-right: 0.5rem;
+}
+#register-form .instructions {
+  display: inline-block;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #5e5e5e;
+  color: #fff;
+  padding: 0.5em 1em 0.5em 1em;
+  /* position: relative; */
+  margin: 0.5em 1em 0.5em 1em;
+  bottom: -10px;
+}
+#register-form .instructions p {
+  margin: 0 0.5em 0 0.5em;
+}
+#register-form .instructions p svg {
+  padding-right: 0.5rem;
+}
+.loading-screen {
+  display: flex;
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+.loading-screen::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  background-image: url("../assets/landing-page-v5.jpg");
+  background-repeat: no-repeat;
+  background-position: 30% 30%;
+  background-size: cover;
+}
+.loading-screen div {
+  justify-content: center;
+  align-items: center;
+  width: 10rem;
+  height: 10rem;
+}
+.loading-screen div span {
+  width: 10rem;
+  height: 10rem;
 }

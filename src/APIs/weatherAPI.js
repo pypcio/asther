@@ -6,7 +6,7 @@ export const useWeatherApi = async (updates) => {
   //   console.log("dlugosc,szerokosc: ", lat, lon);
   const units = "metric";
   const lang = "pl";
-  const apiKey = import.meta.env.VITE_REACT_APP_OPEN_WEATHER_API_KEY;
+  const apiKey = import.meta.env.VITE_REACT_APP_OPEN_WEATHER_TESTY;
   //   const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
   //   console.log((lat && lon) !== "");
   if (lat && lon) {
@@ -16,8 +16,8 @@ export const useWeatherApi = async (updates) => {
     if (!res.ok) {
       throw new Error("could not find that location");
     }
-    console.log("dzwonie po api");
     const result = await res.json();
+    // console.log("dzwonie po api:", result);
     return result;
   } else {
     return updates;

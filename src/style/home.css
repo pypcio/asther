@@ -1,24 +1,12 @@
-#main-page h1 {
+/* #main-page h1 {
   font-size: 1.5rem;
   font-weight: 500;
-  /* display: inline-block; */
   display: flex;
   width: auto;
   justify-content: flex-start;
   align-items: center;
-  /* text-align: center;
-  vertical-align: middle; */
   text-size-adjust: auto;
-  /* margin-right: auto;
-  margin-left: auto;
-  margin-bottom: auto;
-  margin-top: 1rem;
-  padding-right: 3rem;
-  padding-left: 3rem; */
-
-  /* border-bottom: 1px solid hsl(0, 0%, 89%); */
   color: hsl(0, 3%, 22%);
-  /* order: 1; */
   line-height: 1;
 }
 img {
@@ -30,4 +18,4 @@ p {
   display: flex;
   justify-content: flex-start;
   padding-left: 5rem;
-}
+} */

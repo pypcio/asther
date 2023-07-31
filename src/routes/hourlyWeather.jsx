@@ -16,7 +16,7 @@ export default function HourlyWeather() {
     skip: !weatherId, // Skip the query if weatherId is not available
     refetchOnMountOrArgChange: true,
   });
-  const { hourly, timezone_offset } = oneLocation?.location ?? {};
+  const { hourly, timezone_offset } = oneLocation?.location ?? [];
   return (
     <div className="data-parent">
       {!isLoading && hourly[0].weather.length !== 0 ? (
@@ -60,7 +60,7 @@ export default function HourlyWeather() {
                   </p>
                 </div>
                 <div>
-                  <p>{`${hour.temp || "0"}°C`}</p>
+                  <p>{`${hour.temp || "0"} °C`}</p>
                 </div>
                 <div>
                   <p>Zachmurzenie</p>
@@ -68,9 +68,9 @@ export default function HourlyWeather() {
                   <p>Odczuwalna</p>
                 </div>
                 <div>
-                  <p>{`${hour.clouds || "0"}%`}</p>
-                  <p>{`${hour.humidity || "0"}%`}</p>
-                  <p>{`${hour.feels_like || "0"}°C`}</p>
+                  <p>{`${hour.clouds || "0"} %`}</p>
+                  <p>{`${hour.humidity || "0"} %`}</p>
+                  <p>{`${hour.feels_like || "0"} °C`}</p>
                 </div>
                 <div>
                   <p>Kierunek wiatru</p>
@@ -78,9 +78,9 @@ export default function HourlyWeather() {
                   <p>Podmuch wiatru</p>
                 </div>
                 <div>
-                  <p>{convertWindDegreeToDirection(hour.wind_deg)}</p>
-                  <p>{`${hour.wind_speed || "0"}m/s`}</p>
-                  <p>{`${hour.wind_gust || "0"}m/s`}</p>
+                  <p>{convertWindDegreeToDirection(hour.wind_deg) || "- "}</p>
+                  <p>{`${hour.wind_speed || "0"} m/s`}</p>
+                  <p>{`${hour.wind_gust || "0"} m/s`}</p>
                 </div>
                 <div>
                   <p>Ciśnienie</p>
@@ -88,9 +88,9 @@ export default function HourlyWeather() {
                   <p>Widoczność</p>
                 </div>
                 <div>
-                  <p>{`${hour.pressure || "- "}hPa`}</p>
+                  <p>{`${hour.pressure || "- "} hPa`}</p>
                   <p>{`${hour.uvi || "0"} UVI`}</p>
-                  <p>{`${hour.visibility / 1000 || "- "}km`}</p>
+                  <p>{`${hour.visibility / 1000 || "- "} km`}</p>
                 </div>
               </div>
             </div>

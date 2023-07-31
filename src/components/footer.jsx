@@ -33,7 +33,7 @@ const Footer = () => {
         </svg>
       </a>
 
-      <div className="mt2">
+      <div>
         <a href="#" className="f6 link dim color-1 dib mr3 mr4-ns">
           Help
         </a>

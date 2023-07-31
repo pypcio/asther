@@ -2,11 +2,13 @@ import { apiSlice } from "../../APIs/apiSlice";
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUserData: builder.query({
-      query: () => ({
-        url: "/api/data",
-      }),
+      query: () =>
+        // console.log("ciagne dane"),
+        ({
+          url: "/api/data",
+        }),
       providesTags: (result, error, arg) =>
-        result
+        result && Array.isArray(result)
           ? [...result.map(({ id }) => ({ type: "Location", id })), "Location"]
           : ["Location"],
     }),
@@ -41,6 +43,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
       ),
       invalidatesTags: ["Location"],
     }),
+    updateAllUserData: builder.mutation({
+      query: (update) => (
+        console.log("updatedForm", update),
+        {
+          url: `/api/data`,
+          method: "PUT",
+          body: update,
+        }
+      ),
+      invalidatesTags: ["Location"],
+    }),
   }),
 });
 
@@ -50,4 +63,5 @@ export const {
   useCreateUserDataMutation,
   useDeleteUserDataMutation,
   useUpdateUserDataMutation,
+  useUpdateAllUserDataMutation,
 } = userApiSlice;

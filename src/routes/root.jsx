@@ -2,17 +2,14 @@ import {
   Outlet,
   useLoaderData,
   Form,
-  redirect,
   NavLink,
   useNavigation,
   useSubmit,
-  useLocation,
   useNavigate,
-  useParams,
+  useLocation,
 } from "react-router-dom";
 //api
-import servises from "../APIs/servises.js";
-import { getWeathers, createWeather } from "../APIs/dataAPI";
+
 import { useEffect, useRef, useState } from "react";
 import DropDownMenu from "../components/dropDownMenu";
 //images
@@ -20,60 +17,74 @@ import { BsThreeDots } from "react-icons/bs";
 import { BsDownload } from "react-icons/bs";
 import astherLogo from "../assets/logo-5.svg";
 import { Box, Button, Modal } from "@mui/material";
+
 import DownloadButton from "../components/downloadButton.jsx";
 import {
   useCreateUserDataMutation,
   useGetAllUserDataQuery,
+  useUpdateAllUserDataMutation,
 } from "../features/servises/userApiSlice.js";
-// import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
-//
-
-// export async function action({ request }) {
-//   const formData = await request.formData();
-//   let intent = formData.get("intent");
-//   if (intent === "add") {
-//     const weather = await servises.createLocation();
-//     return redirect(`/weathers/${weather.id}/edit`);
-//   }
-//   if (intent === "delete") {
-//     //nie potrzebne
-//   }
-// }
-// export const loader =async ({ request }) => {
-//     const url = new URL(request.url);
-//     const q = url.searchParams.get("q");
-//     const weathers = await servises.getAllLocation(q);
-//     console.log("pokaz dane: ", weathers);
-//     return { weathers, q };
-//   };
+import * as servises from "../APIs/weatherAPI";
 
 export const loader = async ({ request }) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   return { q };
 };
-
 export default function Root() {
   // const [weathers, setWeathers] = useState([]);
+  const [updateAllUserData] = useUpdateAllUserDataMutation();
+  // console.log("error", error, "results", results, updateWeatherData);
   const { q } = useLoaderData();
-  const {
-    data: weathers,
-    isSuccess,
-    isFetching,
-  } = useGetAllUserDataQuery({
-    refetchOnMountOrArgChange: true,
+  const { data, isSuccess, isFetching, refetch } = useGetAllUserDataQuery({
+    refetchOnFocus: true,
   });
+  const weathers = data ?? [];
   const [createUserData] = useCreateUserDataMutation();
   const [open, setOpen] = useState(false);
   const dialogRefs = useRef([]);
   const navigation = useNavigation();
+  const locate = useLocation();
   const submit = useSubmit();
   const navigate = useNavigate();
-  console.log("dane:", weathers);
+  // console.log("weathers", weathers);
   useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
 
+  //=========================REFRESH DATA Z OPEN-WEATHER-API==========================================
+  //====================WYLACZONA W CELU ZMNIEJSZENIA ZUZYCIA REQUESTOW===============================
+
+  // useEffect(() => {
+  //   const updateWeatherData = async () => {
+  //     console.log("weathers: ", weathers);
+  //     try {
+  //       const fetchData = weathers.map(async (weather) => {
+  //         if (weather.location.city !== undefined) {
+  //           const updateWeather = await servises.useWeatherApi({
+  //             lat: weather.location.lat,
+  //             lon: weather.location.lon,
+  //           });
+  //           // console.log("update weather", updateWeather);
+  //           return updateWeather;
+  //         } else {
+  //           return weather;
+  //         }
+  //       });
+  //       // Wait for all API calls to finish and return the results
+  //       const results = await Promise.all(fetchData);
+  //       console.log("results", results);
+  //       // Update the data on the server
+  //       const updateAllData = updateAllUserData(results);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   updateWeatherData();
+  // }, [isSuccess]);
+  useEffect(() => {
+    refetch();
+  }, [locate.pathname]);
   useEffect(() => {
     let handlers = [];
     if (!isFetching) {
@@ -101,13 +112,13 @@ export default function Root() {
         document.removeEventListener("mousedown", handler);
       });
     };
-  }, [isFetching]);
+  }, [isFetching, isSuccess]);
 
   const handleNewLocation = async (e) => {
     e.preventDefault();
     try {
       const response = await createUserData().unwrap();
-      console.log("nowa lokacja: ", response);
+      // console.log("nowa lokacja: ", response);
       navigate(`${response._id.toString()}/edit`);
     } catch (error) {
       console.log(error);
@@ -125,6 +136,8 @@ export default function Root() {
   const handleDialog = (index) => {
     dialogRefs.current[index]?.show();
   };
+  // console.log("q: ", q);
+  // console.log("weathers: ", weathers);
   return (
     <div id="wrap-app">
       <div id="application">
@@ -166,45 +179,57 @@ export default function Root() {
           </div>
           <nav>
             {isSuccess ? (
-              <ul>
-                {weathers.map((weather, index) => (
-                  <li key={weather._id.toString()}>
-                    <NavLink
-                      to={`${weather._id.toString()}`}
-                      className={({ isActive, isPending }) =>
-                        isActive ? " active" : isPending ? " pending" : ""
+              weathers.length === 0 ? (
+                <p className="pa0">
+                  <i>No locations added</i>
+                </p>
+              ) : (
+                <ul>
+                  {weathers
+                    .filter((weather) => {
+                      if (q && weather.location.city) {
+                        return weather.location.city
+                          .toLowerCase()
+                          .includes(q.toLowerCase());
                       }
-                    >
-                      {weather.location?.city ? (
-                        <>{weather.location.city}</>
-                      ) : (
-                        <i>No City</i>
-                      )}
-                      {}
-                    </NavLink>
-                    <div
-                      className="drop-menu-button"
-                      onClick={() => handleDialog(index)}
-                    >
-                      <BsThreeDots />
-                    </div>
-                    <dialog
-                      id="modal-drop-menu"
-                      ref={(el) => (dialogRefs.current[index] = el)}
-                    >
-                      <DropDownMenu id={weather._id.toString()} />
-                    </dialog>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>
-                <i>No locations added</i>
-              </p>
-            )}
+                      return weather;
+                    })
+                    .map((weather, index) => (
+                      <li key={weather._id.toString()}>
+                        <NavLink
+                          to={`${weather._id.toString()}`}
+                          className={({ isActive, isPending }) =>
+                            isActive ? " active" : isPending ? " pending" : ""
+                          }
+                        >
+                          {weather.location?.city ? (
+                            <>{weather.location.city}</>
+                          ) : (
+                            <i>No City</i>
+                          )}
+                          {}
+                        </NavLink>
+                        <div
+                          className="drop-menu-button"
+                          onClick={() => handleDialog(index)}
+                        >
+                          <BsThreeDots />
+                        </div>
+                        <dialog
+                          id="modal-drop-menu"
+                          ref={(el) => (dialogRefs.current[index] = el)}
+                        >
+                          <DropDownMenu id={weather._id.toString()} />
+                        </dialog>
+                      </li>
+                    ))}
+                </ul>
+              )
+            ) : null}
           </nav>
           <Button onClick={handleOpen}>
-            {`Download weather`} <BsDownload />
+            {`Download weather`}
+            <BsDownload />
           </Button>
           <Modal
             open={open}

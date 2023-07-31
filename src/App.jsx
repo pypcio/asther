@@ -15,10 +15,25 @@ import EditWeatherRoot from "./routes/edit";
 // import { action as deleteAction } from "./routes/delete";
 import Index from "./routes";
 import SignIn from "./routes/signIn.jsx";
-import Register, { action as registerAction } from "./routes/register.jsx";
+import Register from "./routes/register.jsx";
 //components
 import Layout from "./components/layout.jsx";
 import RequireAuth from "./routes/requireAuth.jsx";
+import { useCookies } from "react-cookie";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import {
+  selectCurrentToken,
+  selectCurrentUser,
+  selectRefreshToken,
+  setCredentials,
+} from "./features/authSlice.js";
+import { useEffect } from "react";
+import PanelRoot from "./routes/panelRoot.jsx";
+import Profile from "./routes/profile.jsx";
+import Settings from "./routes/settings.jsx";
+import PanelLayout from "./components/panelLayout.jsx";
+import * as jose from "jose";
 import Welcome from "./routes/Welcome.jsx";
 // import User from "./routes/user.jsx";
 // import Home from "./routes/home.jsx";
@@ -27,8 +42,65 @@ import Welcome from "./routes/Welcome.jsx";
 // import useAuth from "./hooks/useAuth.js";
 
 function App() {
-  // const [auth, setAuth] = useAuth();
-  // const axiosPrivate = useAxiosPrivate();
+  const token = useSelector(selectCurrentToken);
+  const user = useSelector(selectCurrentUser);
+  const refreshToken = useSelector(selectRefreshToken);
+  // console.log("refreshToken", refreshToken);
+  const [cookieToken] = useCookies(["jwt-authorization"]);
+  const [cookieRefreshToken] = useCookies(["jwt-refreshToken"]);
+  const dispatch = useDispatch();
+  const currentTime = Date.now();
+  const secret = new TextEncoder().encode(
+    import.meta.env.VITE_REACT_APP_VERIFY_TOKEN
+  );
+  // console.log("token:", token);
+  // console.log("user:", user);
+  // console.log("cookieRefreshToken", cookieRefreshToken["jwt-refreshToken"]);
+  // console.log("cookieToken", cookieToken["jwt-authorization"]);
+  useEffect(() => {
+    const decodeCookie = async () => {
+      if (!token || !refreshToken) {
+        if (
+          cookieToken["jwt-authorization"] &&
+          cookieRefreshToken["jwt-refreshToken"]
+        ) {
+          try {
+            const decodeToken = await jose.jwtVerify(
+              cookieToken["jwt-authorization"],
+              secret
+            );
+            // console.log("decodeToken", decodeToken.payload.user);
+            dispatch(
+              setCredentials({
+                user: { ...decodeToken.payload.user },
+                token: cookieToken["jwt-authorization"],
+                refreshToken: cookieRefreshToken["jwt-refreshToken"],
+              })
+            );
+          } catch (error) {
+            console.log(error);
+          }
+        } else if (cookieRefreshToken["jwt-refreshToken"]) {
+          try {
+            const decodeRefreshToken = await jose.jwtVerify(
+              cookieRefreshToken["jwt-refreshToken"],
+              secret
+            );
+            // console.log("decodeRefreshToken", decodeRefreshToken.payload.user);
+            dispatch(
+              setCredentials({
+                user: { ...decodeRefreshToken.payload.user },
+                refreshToken: cookieRefreshToken["jwt-refreshToken"],
+              })
+            );
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+    };
+    decodeCookie();
+  }, []);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -41,12 +113,11 @@ function App() {
           <Route
             path="register"
             element={<Register />}
-            action={registerAction}
+            // action={registerAction}
           />
           <Route path="welcome" element={<Welcome />} />
         </Route>
         <Route element={<RequireAuth />}>
-          <Route path="welcome" element={<Welcome />} />
           {/* <Route path="user" element={<User />} /> */}
           <Route
             path="user"
@@ -69,20 +140,18 @@ function App() {
                 <Route path="hourly" element={<HourlyWeather />} />
                 <Route path="daily" element={<DailyWeather />} />
               </Route>
-              <Route
-                path=":weatherId/edit"
-                element={<EditWeatherRoot />}
-                // loader={editWeatherLoader}
-                // action={editWeatherRootAction}
-              />
-              <Route
-                path=":weatherId/delete"
-                // action={deleteAction}
-                errorElement={<ErrorPage />}
-              />
+              <Route path=":weatherId/edit" element={<EditWeatherRoot />} />
+              <Route path=":weatherId/delete" errorElement={<ErrorPage />} />
+            </Route>
+          </Route>
+          <Route element={<PanelRoot />}>
+            <Route path="panel" element={<PanelLayout />}>
+              <Route path="profile" element={<Profile />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
           </Route>
         </Route>
+        <Route errorElement={<ErrorPage />} />
       </Route>
     )
   );

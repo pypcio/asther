@@ -1,4 +1,10 @@
-import { redirect, useNavigate, useParams } from "react-router-dom";
+import {
+  redirect,
+  useLocation,
+  useNavigate,
+  useNavigation,
+  useParams,
+} from "react-router-dom";
 import {
   faCheck,
   faTimes,
@@ -32,17 +38,21 @@ import * as servises from "../APIs/weatherAPI";
 // }
 function EditWeatherRoot() {
   const { weatherId } = useParams();
-  console.log("editId: ", weatherId);
-  const { data: weather } = useGetUserDataQuery(weatherId, {
+  // console.log("editId: ", weatherId);
+  const { data: weather, isLoading } = useGetUserDataQuery(weatherId, {
     skip: !weatherId, // Skip the query if weatherId is not available
   });
   const [updateUserData] = useUpdateUserDataMutation();
   const navigate = useNavigate();
+  const navigation = useNavigation();
+  let location = useLocation();
+  // console.log("location: ", location);
+  // console.log("navigation: ", navigation);
   const userRef = useRef();
   //location
   const [city, setCity] = useState(weather?.location.city || "");
   const [validCity, setValidCity] = useState(false);
-  const [cityFocus, setCityFocus] = useState(false);
+  const [cityFocus, setCityFocus] = useState(true);
   //lattitude
   const [lat, setLat] = useState(`${weather?.location.lat || ""}`);
   const [validLat, setValidLat] = useState(false);
@@ -54,10 +64,10 @@ function EditWeatherRoot() {
   //error message
   const [errMsg, setErrMsg] = useState(false);
   const [disable, setDisable] = useState(false);
-
+  // console.log(navigator);
   useEffect(() => {
     userRef.current.focus();
-  }, []);
+  }, [isLoading]);
   useEffect(() => {
     async function locationValidationApi() {
       const test = await geocodingGoogleApi(city);
@@ -97,14 +107,14 @@ function EditWeatherRoot() {
         weatherId,
         { city, ...updateWeather },
       ]).unwrap();
-      console.log("update:", updateLocation);
+      // console.log("update:", updateLocation);
     } catch (error) {
       setErrMsg("failed to fetch data");
       console.log(error);
     }
     navigate(`/user/${weatherId}`, { replace: true });
   };
-
+  // console.log("data?:", weather);
   return (
     <div id="edit-root">
       <section id="edit-form">
@@ -118,7 +128,8 @@ function EditWeatherRoot() {
                 name="city"
                 // id="city"
                 ref={userRef}
-                value={city}
+                defaultValue={weather?.location.city ?? city}
+                // value={city}
                 autoComplete="off"
                 required
                 onChange={(e) => setCity(e.target.value)}
@@ -152,14 +163,15 @@ function EditWeatherRoot() {
               <div className="data-location">
                 <p>
                   <input
-                    ref={userRef}
+                    // ref={userRef}
                     placeholder="szerokość"
                     aria-label="lat"
                     type="text"
                     name="lat"
                     id="lat"
                     readOnly={disable}
-                    value={lat}
+                    defaultValue={weather?.location.lat ?? lat}
+                    // value={lat}
                     required
                     autoComplete="off"
                     onChange={(e) => setLat(e.target.value)}
@@ -194,8 +206,9 @@ function EditWeatherRoot() {
                     type="text"
                     name="lon"
                     id="lon"
-                    ref={userRef}
-                    value={lon}
+                    // ref={userRef}
+                    defaultValue={weather?.location.lon ?? lon}
+                    // value={lon}
                     autoComplete="off"
                     required
                     readOnly={disable}

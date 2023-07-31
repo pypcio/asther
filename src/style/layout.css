@@ -11,11 +11,10 @@
   top: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.85;
-  background-image: url("../assets/landing-page-v2.jpg");
+  opacity: 0.9;
+  background-image: url("../assets/landing-page-v5.jpg");
   background-repeat: no-repeat;
-  background-position: 50% 32%;
-  /* background-size: 80%; */
+  background-position: 30% 30%;
   background-size: cover;
 }
 
@@ -48,15 +47,18 @@ nav {
 .navlink {
   text-decoration: none;
 }
-a:hover {
+/* a:hover {
   transform: scale(1.05);
   filter: brightness(1.2);
-}
+} */
 article {
   background-color: aliceblue;
 }
 form input[type="text"]:hover,
 form input[type="password"]:hover,
-form input[type="email"]:hover {
+form input[type="email"]:hover,
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form input[type="email"]:focus {
   background-color: #b1b6eb;
 }

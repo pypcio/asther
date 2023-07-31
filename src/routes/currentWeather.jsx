@@ -72,6 +72,8 @@ export default function CurrentWeather() {
             </div>
           </div>
         </div>
+      ) : isLoading ? (
+        <h1>Loading...</h1>
       ) : (
         <div className="options">
           <p>add location first:</p>

@@ -1,4 +1,10 @@
-import { Link } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 //style
 // import "../style/dropDownMenu.css";
 // import editImage from "../assets/icon-edit.png";
@@ -10,14 +16,29 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { useDeleteUserDataMutation } from "../features/servises/userApiSlice";
 // import { HiOutlineMenuAlt4 } from "react-icons/hi";
 // import { BsThreeDots } from "react-icons/bs";
+function removeAfterLastSlash(str) {
+  const lastSlashIndex = str.lastIndexOf("/");
+  if (lastSlashIndex !== -1) {
+    return str.substring(0, lastSlashIndex);
+  }
+  return str;
+}
 
 function DropDownMenu({ id }) {
   // console.log("nowe id", id);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { weatherId } = useParams;
+  // console.log("id", id);
   const [deleteUserData] = useDeleteUserDataMutation();
   const handleDeleteLocation = async (e) => {
     e.preventDefault();
     try {
-      const response = await deleteUserData(id);
+      const response = deleteUserData(id);
+      const checkPath = removeAfterLastSlash(location.pathname);
+      if (`/user/${id}` === checkPath) {
+        navigate("/user");
+      }
     } catch (error) {
       console.log("nie udalo sie usunac", error);
     }
@@ -27,7 +48,7 @@ function DropDownMenu({ id }) {
     <div className="dropdown">
       <ul>
         <li>
-          <Link to={`${id}/edit`}>
+          <Link to={`/user/${id}/edit`}>
             <AiOutlineEdit /> <span>Edit</span>
           </Link>
         </li>
