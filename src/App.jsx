@@ -117,7 +117,7 @@ function App() {
             </Route>
           </Route>
         </Route>
-        <Route errorElement={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />} />
       </Route>
     )
   );
