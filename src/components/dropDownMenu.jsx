@@ -1,49 +1,26 @@
-import {
-  Link,
-  NavLink,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-//style
-// import "../style/dropDownMenu.css";
-// import editImage from "../assets/icon-edit.png";
-// import deleteImage from "../assets/icon-delete.png";
-// import { BiMenu } from "react-icons/bi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
-// import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useDeleteUserDataMutation } from "../features/servises/userApiSlice";
-// import { HiOutlineMenuAlt4 } from "react-icons/hi";
-// import { BsThreeDots } from "react-icons/bs";
-function removeAfterLastSlash(str) {
-  const lastSlashIndex = str.lastIndexOf("/");
-  if (lastSlashIndex !== -1) {
-    return str.substring(0, lastSlashIndex);
-  }
-  return str;
-}
 
 function DropDownMenu({ id }) {
   // console.log("nowe id", id);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { weatherId } = useParams;
+  const { weatherId } = useParams();
   // console.log("id", id);
   const [deleteUserData] = useDeleteUserDataMutation();
   const handleDeleteLocation = async (e) => {
     e.preventDefault();
     try {
       const response = deleteUserData(id);
-      const checkPath = removeAfterLastSlash(location.pathname);
-      if (`/user/${id}` === checkPath) {
+      if (`${id}` === `${weatherId}`) {
         navigate("/user");
       }
     } catch (error) {
       console.log("nie udalo sie usunac", error);
     }
   };
-  // console.log("pokaz mi Id: ", id);
   return (
     <div className="dropdown">
       <ul>

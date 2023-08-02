@@ -1,3 +1,6 @@
+* {
+  font-family: Open Sans, sans-serif;
+}
 #sidebar-panel {
   width: 18rem;
   background-color: #f7f7f7;
@@ -28,6 +31,22 @@
 #profile-details {
   flex-direction: column;
 }
+#profile-details div {
+  font-size: 2rem;
+  height: 5rem;
+  width: 5rem;
+}
+#profile-details p {
+  padding: 0;
+  margin: 0;
+}
+#profile-details p:last-child {
+  margin-top: 1rem;
+}
+/* #profile-details div > div > * {
+  height: 100%;
+  width: auto;
+} */
 #sidebar-panel nav span {
   font-size: 1em;
   color: #121212;
@@ -93,4 +112,63 @@ i {
 
 #sidebar-panel nav a.pending {
   color: hsl(224, 98%, 58%);
+}
+#detail-panel {
+  color: #5a5959;
+  display: flex;
+  flex-direction: column;
+  background-color: #acb2b9;
+  flex: 1;
+  overflow: auto;
+}
+.panel-settings {
+  font-family: Open Sans, sans-serif;
+}
+.box-settings {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0 3rem 2rem 3rem;
+  height: auto;
+  width: auto;
+  background-color: hsl(0, 0%, 89%);
+  border-radius: 0.5rem;
+}
+.box-settings label {
+  color: #5a5959;
+}
+.password-form {
+  padding-bottom: 0;
+}
+#detail-panel button {
+  margin-bottom: 1.5rem;
+}
+/* #uidnote-log {
+  width: 50%;
+  margin-left: 0;
+  margin-right: auto;
+} */
+.box-settings .instructions {
+  display: flex;
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #5e5e5e;
+  color: #fff;
+  width: auto;
+  margin: 0.5em 0 0.5em 0;
+  bottom: -10px;
+}
+.box-settings .instructions p {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 0.5em 0 0.5em;
+}
+.box-settings .instructions p span {
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+}
+.box-settings .instructions p svg {
+  margin-right: 0.5rem;
 }

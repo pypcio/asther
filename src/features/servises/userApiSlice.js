@@ -33,25 +33,38 @@ export const userApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Location"],
     }),
     updateUserData: builder.mutation({
-      query: ([id, update]) => (
-        console.log("id", id, "updatedForm", update),
-        {
+      query: ([id, update]) =>
+        // console.log("id", id, "updatedForm", update),
+        ({
           url: `/api/data/${id}`,
           method: "PUT",
           body: update,
-        }
-      ),
+        }),
       invalidatesTags: ["Location"],
     }),
     updateAllUserData: builder.mutation({
-      query: (update) => (
-        console.log("updatedForm", update),
-        {
-          url: `/api/data`,
-          method: "PUT",
+      query: (update) => ({
+        url: `/api/data`,
+        method: "PUT",
+        body: update,
+      }),
+      invalidatesTags: ["Location"],
+    }),
+    deleteUser: builder.mutation({
+      query: () => ({
+        url: `/api/data`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Location"],
+    }),
+    updateUserPassword: builder.mutation({
+      query: (update) =>
+        // console.log("updatedForm", update),
+        ({
+          url: `/api/data/password`,
+          method: "PATCH",
           body: update,
-        }
-      ),
+        }),
       invalidatesTags: ["Location"],
     }),
   }),
@@ -64,4 +77,6 @@ export const {
   useDeleteUserDataMutation,
   useUpdateUserDataMutation,
   useUpdateAllUserDataMutation,
+  useDeleteUserMutation,
+  useUpdateUserPasswordMutation,
 } = userApiSlice;
