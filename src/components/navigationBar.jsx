@@ -3,7 +3,6 @@ import { NavLink, useLocation } from "react-router-dom";
 
 function NavigationBar() {
   const location = useLocation();
-  console.log("location: ", location.pathname);
   const navStyle = {
     display: "flex",
     justifyContent: "space-between",

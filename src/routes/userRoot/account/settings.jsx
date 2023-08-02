@@ -45,7 +45,7 @@ function Settings() {
       onTimeErrors.password === "success"
     ) {
       try {
-        console.log("zmieniam haslo");
+        // console.log("zmieniam haslo");
         const updateUser = await changePassword({
           password: inputs.password,
           password2: inputs.password2,
@@ -59,7 +59,7 @@ function Settings() {
     }
   };
   const handleDeleteUser = async () => {
-    console.log("wchodze tu");
+    // console.log("wchodze tu");
     const isConfirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone."
     );

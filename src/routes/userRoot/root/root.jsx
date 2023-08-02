@@ -72,7 +72,7 @@ export default function Root() {
         });
         // Wait for all API calls to finish and return the results
         const results = await Promise.all(fetchData);
-        console.log("results", results);
+        // console.log("results", results);
         // Update the data on the server
         const updateAllData = updateAllUserData(results);
       } catch (error) {
