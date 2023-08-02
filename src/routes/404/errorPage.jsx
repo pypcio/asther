@@ -1,5 +1,4 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 
 export default function ErrorPage() {
@@ -19,9 +18,15 @@ export default function ErrorPage() {
         }}
       >
         <Container maxWidth="md">
-          <Grid container spacing={2}>
-            <Grid xs={6}>
-              <Typography variant="h1" color={"#1976d2"}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ flex: "1", paddingRight: "1rem" }}>
+              <Typography variant="h1" style={{ color: "#1976d2" }}>
                 404
               </Typography>
               <Typography variant="h6">
@@ -32,16 +37,16 @@ export default function ErrorPage() {
                   <Link to="/user">Home</Link>
                 </Button>
               </div>
-            </Grid>
-            <Grid xs={6}>
+            </div>
+            <div style={{ flex: "1", paddingLeft: "1rem" }}>
               <img
                 src="https://i.imgur.com/qIufhof.png"
                 alt=""
                 width={500}
                 height={250}
               />
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </Container>
       </Box>
     </div>
