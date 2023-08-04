@@ -65,7 +65,7 @@ function App() {
           } else {
             credentials.refreshToken = cookie;
           }
-          console.log("credentials:", credentials);
+          // console.log("credentials:", credentials);
           dispatch(setCredentials(credentials));
         } catch (error) {
           console.log(error);

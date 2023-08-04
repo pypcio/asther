@@ -63,7 +63,7 @@ function EditWeatherRoot() {
       if (test) {
         setLat(test.lat.toString());
         setLon(test.lng.toString());
-        console.log("tak", lat, lon);
+        // console.log("tak", lat, lon);
         setDisable(true);
       } else {
         setDisable(false);
@@ -96,7 +96,7 @@ function EditWeatherRoot() {
         weatherId,
         { city, ...updateWeather },
       ]).unwrap();
-      console.log("update:", updateLocation);
+      // console.log("update:", updateLocation);
     } catch (error) {
       setErrMsg("failed to fetch data");
       console.log(error);

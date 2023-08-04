@@ -52,16 +52,16 @@ export default function Root() {
 
   //=========================REFRESH DATA Z OPEN-WEATHER-API==========================================
   //========================TURN ON/OFF DEPANDING ON TRAFFIC==========================================
-  // useEffect(() => {
-  //   const updateWeatherData = async () => {
-  //     try {
-  //       const updateAllData = updateAllUserData();
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   updateWeatherData();
-  // }, [isSuccess]);
+  useEffect(() => {
+    const updateWeatherData = async () => {
+      try {
+        const updateAllData = updateAllUserData();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    updateWeatherData();
+  }, [isSuccess]);
 
   useEffect(() => {
     refetch();
