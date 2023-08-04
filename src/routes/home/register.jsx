@@ -41,7 +41,7 @@ function Register() {
       <main id="register-form" className="pa4 black-80">
         <form onSubmit={handleSubmit} className="measure">
           <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-            <legend className="f2 fw6 ph0 mh0">Register</legend>
+            <legend className="f2 fw6 ph0 mh0 center">Register</legend>
             <div className="mt2">
               <label className="db fw6 lh-copy f6" htmlFor="login">
                 Login

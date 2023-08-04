@@ -24,7 +24,6 @@ import {
   useGetAllUserDataQuery,
   useUpdateAllUserDataMutation,
 } from "../../../features/servises/userApiSlice.js";
-import * as servises from "../../../APIs/weatherAPI";
 
 export const loader = async ({ request }) => {
   const url = new URL(request.url);
@@ -52,35 +51,18 @@ export default function Root() {
   }, [q]);
 
   //=========================REFRESH DATA Z OPEN-WEATHER-API==========================================
-  //====================WYLACZONA W CELU ZMNIEJSZENIA ZUZYCIA CALLI===============================
+  //========================TURN ON/OFF DEPANDING ON TRAFFIC==========================================
+  // useEffect(() => {
+  //   const updateWeatherData = async () => {
+  //     try {
+  //       const updateAllData = updateAllUserData();
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   updateWeatherData();
+  // }, [isSuccess]);
 
-  useEffect(() => {
-    const updateWeatherData = async () => {
-      // console.log("weathers: ", weathers);
-      try {
-        const fetchData = weathers.map(async (weather) => {
-          if (weather.location.city !== undefined) {
-            const updateWeather = await servises.useWeatherApi({
-              lat: weather.location.lat,
-              lon: weather.location.lon,
-            });
-            // console.log("update weather", updateWeather);
-            return updateWeather;
-          } else {
-            return weather;
-          }
-        });
-        // Wait for all API calls to finish and return the results
-        const results = await Promise.all(fetchData);
-        // console.log("results", results);
-        // Update the data on the server
-        const updateAllData = updateAllUserData(results);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    updateWeatherData();
-  }, [isSuccess]);
   useEffect(() => {
     refetch();
   }, [locate.pathname]);

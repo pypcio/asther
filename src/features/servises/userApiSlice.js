@@ -43,10 +43,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Location"],
     }),
     updateAllUserData: builder.mutation({
-      query: (update) => ({
+      query: () => ({
         url: `/api/data`,
         method: "PUT",
-        body: update,
       }),
       invalidatesTags: ["Location"],
     }),

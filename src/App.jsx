@@ -32,63 +32,50 @@ import PanelRoot from "./routes/userRoot/account/panelRoot.jsx";
 import Profile from "./routes/userRoot/account/profile.jsx";
 import Settings from "./routes/userRoot/account/settings.jsx";
 import PanelLayout from "./components/panelLayout.jsx";
-import * as jose from "jose";
-
+import { decodeToken } from "./features/others/decodeToken.js";
 function App() {
   const token = useSelector(selectCurrentToken);
   const refreshToken = useSelector(selectRefreshToken);
-  // console.log("refreshToken", refreshToken);
   const [cookieToken] = useCookies(["jwt-authorization"]);
   const [cookieRefreshToken] = useCookies(["jwt-refreshToken"]);
   const dispatch = useDispatch();
-  const secret = new TextEncoder().encode(
-    import.meta.env.VITE_REACT_APP_VERIFY_TOKEN
-  );
 
   useEffect(() => {
     const decodeCookie = async () => {
-      if (!token || !refreshToken) {
-        if (
-          cookieToken["jwt-authorization"] &&
-          cookieRefreshToken["jwt-refreshToken"]
-        ) {
-          try {
-            const decodeToken = await jose.jwtVerify(
-              cookieToken["jwt-authorization"],
-              secret
-            );
-            // console.log("decodeToken", decodeToken.payload.user);
-            dispatch(
-              setCredentials({
-                user: { ...decodeToken.payload.user },
-                token: cookieToken["jwt-authorization"],
-                refreshToken: cookieRefreshToken["jwt-refreshToken"],
-              })
-            );
-          } catch (error) {
-            console.log(error);
+      if (token || refreshToken) return;
+
+      const cookies = [
+        { cookie: cookieToken["jwt-authorization"], type: "token" },
+        {
+          cookie: cookieRefreshToken["jwt-refreshToken"],
+          type: "refreshToken",
+        },
+      ];
+
+      for (const { cookie, type } of cookies) {
+        if (!cookie) continue;
+
+        try {
+          const decoded = decodeToken(cookie);
+          const credentials = { user: { ...decoded.user } };
+
+          if (type === "token") {
+            credentials.token = cookie;
+            credentials.refreshToken = cookieRefreshToken["jwt-refreshToken"];
+          } else {
+            credentials.refreshToken = cookie;
           }
-        } else if (cookieRefreshToken["jwt-refreshToken"]) {
-          try {
-            const decodeRefreshToken = await jose.jwtVerify(
-              cookieRefreshToken["jwt-refreshToken"],
-              secret
-            );
-            // console.log("decodeRefreshToken", decodeRefreshToken.payload.user);
-            dispatch(
-              setCredentials({
-                user: { ...decodeRefreshToken.payload.user },
-                refreshToken: cookieRefreshToken["jwt-refreshToken"],
-              })
-            );
-          } catch (error) {
-            console.log(error);
-          }
+          console.log("credentials:", credentials);
+          dispatch(setCredentials(credentials));
+        } catch (error) {
+          console.log(error);
         }
       }
     };
+
     decodeCookie();
-  }, []);
+  }, [token, refreshToken, cookieToken, cookieRefreshToken, dispatch]);
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>

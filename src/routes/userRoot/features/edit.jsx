@@ -12,31 +12,28 @@ import {
   isValidLongitude,
 } from "../../../features/others/functions";
 import { useEffect, useState, useRef } from "react";
-import { geocodingGoogleApi } from "../../../APIs/weatherAPI";
 import {
   useGetUserDataQuery,
   useUpdateUserDataMutation,
 } from "../../../features/servises/userApiSlice";
-import * as servises from "../../../APIs/weatherAPI";
-// export async function action({ request, params }) {
-//   const formData = await request.formData();
-//   const update = Object.fromEntries(formData);
-//   console.log("update: ", update);
-//   await servises.updateLocation(params.weatherId, update);
-//   return redirect(`/weathers/${params.weatherId}`);
-// }
+import {
+  useGeocodingGoogleApiMutation,
+  useGetWeatherMutation,
+} from "../../../features/servises/functionalApiSlice";
 
-// export async function loader({ params }) {
-//   const weather = await servises.getOneLocation(params.weatherId);
-//   return { weather };
-// }
 function EditWeatherRoot() {
   const { weatherId } = useParams();
   // console.log("editId: ", weatherId);
-  const { data: weather, isLoading } = useGetUserDataQuery(weatherId, {
+  const {
+    data: weather,
+    isLoading,
+    isSuccess,
+  } = useGetUserDataQuery(weatherId, {
     skip: !weatherId, // Skip the query if weatherId is not available
   });
   const [updateUserData] = useUpdateUserDataMutation();
+  const [getWeatherApi] = useGetWeatherMutation();
+  const [geocodingGoogleApi] = useGeocodingGoogleApiMutation();
   const navigate = useNavigate();
 
   const userRef = useRef();
@@ -61,12 +58,13 @@ function EditWeatherRoot() {
   }, [isLoading]);
   useEffect(() => {
     async function locationValidationApi() {
-      const test = await geocodingGoogleApi(city);
+      const test = await geocodingGoogleApi({ location: city }).unwrap();
+      // console.log("test", test);
       if (test) {
         setLat(test.lat.toString());
         setLon(test.lng.toString());
+        console.log("tak", lat, lon);
         setDisable(true);
-        // console.log("lat,lon: ", lat, lon);
       } else {
         setDisable(false);
         setLat("");
@@ -93,12 +91,12 @@ function EditWeatherRoot() {
   const handleEditLocation = async (e) => {
     e.preventDefault();
     try {
-      const updateWeather = await servises.useWeatherApi({ lat, lon });
+      const updateWeather = await getWeatherApi({ lat, lon }).unwrap();
       const updateLocation = updateUserData([
         weatherId,
         { city, ...updateWeather },
       ]).unwrap();
-      // console.log("update:", updateLocation);
+      console.log("update:", updateLocation);
     } catch (error) {
       setErrMsg("failed to fetch data");
       console.log(error);
@@ -119,7 +117,7 @@ function EditWeatherRoot() {
                 name="city"
                 // id="city"
                 ref={userRef}
-                defaultValue={weather?.location.city ?? city}
+                defaultValue={city}
                 // value={city}
                 autoComplete="off"
                 required
@@ -161,7 +159,7 @@ function EditWeatherRoot() {
                     name="lat"
                     id="lat"
                     readOnly={disable}
-                    defaultValue={weather?.location.lat ?? lat}
+                    value={lat}
                     // value={lat}
                     required
                     autoComplete="off"
@@ -198,7 +196,7 @@ function EditWeatherRoot() {
                     name="lon"
                     id="lon"
                     // ref={userRef}
-                    defaultValue={weather?.location.lon ?? lon}
+                    value={lon}
                     // value={lon}
                     autoComplete="off"
                     required
