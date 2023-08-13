@@ -7,6 +7,7 @@ import { selectCurrentUser } from "../../../features/reduxSlice/authSlice";
 import { useCookies } from "react-cookie";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
+import { emphasize } from "@mui/material";
 function stringToColor(string) {
   let hash = 0;
   let i;
@@ -40,13 +41,13 @@ function PanelRoot() {
     removeRefreshToken("jwt-refreshToken");
     dispatch(logOut());
   };
-  const name = `${user.name}`;
+  const name = user?.email.split("@")[0];
   return (
     <>
       <div id="sidebar-panel">
         <div id="profile-details">
           <Stack direction="row" spacing={2}>
-            <Avatar alt={`${name}`} {...stringAvatar(`${name}`)} />
+            <Avatar alt={`${user.name}`} {...stringAvatar(`${name[0]}`)} />
           </Stack>
           <p>Welcome</p>
           <p className="fw6">{name}</p>

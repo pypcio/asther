@@ -64,7 +64,7 @@ export default function WeatherRoot() {
                 )}
               </h4>
               <Link to="/">
-                <h4 className="dim">ASTHER</h4>
+                <h4 className="dim">Asther</h4>
               </Link>
               <Tooltip title="Open settings">
                 <IconButton

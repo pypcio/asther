@@ -26,7 +26,7 @@ export default function Index() {
   return (
     <div id="detail-index" className="mh5 mv4">
       <Link className="upper-logo  ph4 dim" to="/">
-        ASTHER
+        Asther
       </Link>
       <div>
         <Tooltip title="Open settings">

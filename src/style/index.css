@@ -1092,6 +1092,10 @@ input.success {
   margin: 0.5em 0 0.5em 0;
   bottom: -10px;
 }
+#login-form .red {
+  margin: 1em 0 0.5em 0;
+  background-color: rgb(225, 29, 29);
+}
 #login-form .instructions p {
   display: flex;
   justify-content: flex-start;

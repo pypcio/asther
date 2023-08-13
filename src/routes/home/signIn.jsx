@@ -17,6 +17,7 @@ function SignIn() {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const [loginFocus, setLoginFocus] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(true);
   const [, setToken] = useCookies(["jwt-authorization"]);
   const [, setRefreshToken] = useCookies(["jwt-refreshToken"]);
@@ -48,6 +49,7 @@ function SignIn() {
 
         navigate("/user");
       } catch (error) {
+        setIsError(true);
         console.log(error);
       }
     }
@@ -79,6 +81,7 @@ function SignIn() {
                 onFocus={() => {
                   handleValidation();
                   setLoginFocus(true);
+                  setIsError(false);
                 }}
                 onBlur={() => {
                   setLoginFocus(false);
@@ -118,6 +121,7 @@ function SignIn() {
                 aria-describedby="uidnote-login"
                 onFocus={() => {
                   // handleValidation();
+                  setIsError(false);
                   setPasswordFocus(true);
                 }}
                 onBlur={() => {
@@ -141,6 +145,19 @@ function SignIn() {
                     Minimum 8 characters <br />
                     At least one special character
                   </span>
+                </p>
+              </div>
+              <div
+                id="uidnote-login"
+                className={
+                  (!loginFocus || !passwordFocus) && isError
+                    ? "instructions red"
+                    : "offscreen"
+                }
+              >
+                <p>
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                  <span>Login or password is incorrect!</span>
                 </p>
               </div>
             </div>

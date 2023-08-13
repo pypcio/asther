@@ -7,7 +7,7 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef } from "react";
 
-function Register() {
+function Register({ handlePermission }) {
   const navigate = useNavigate();
   const [registerUser] = useRegisterMutation();
   const inputRef = useRef();
@@ -29,7 +29,8 @@ function Register() {
           password: inputs.password,
           email: inputs.email,
         }).unwrap();
-        navigate("/user");
+        handlePermission(true);
+        navigate("/navigate-home");
       } catch (error) {
         console.log(error);
       }
@@ -183,7 +184,7 @@ function Register() {
               Already have account?
             </p>
             <Link
-              to="/signIn"
+              to="/user"
               className="flex items-center b ph3 pv2 input-reset bg-transparent grow pointer f6  dim"
             >
               <span className="black fw5">Login</span>
