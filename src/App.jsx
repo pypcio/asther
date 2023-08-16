@@ -27,7 +27,7 @@ import {
   selectRefreshToken,
   setCredentials,
 } from "./features/reduxSlice/authSlice.js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PanelRoot from "./routes/userRoot/account/panelRoot.jsx";
 import Profile from "./routes/userRoot/account/profile.jsx";
 import Settings from "./routes/userRoot/account/settings.jsx";
@@ -36,7 +36,6 @@ import { decodeToken } from "./features/others/decodeToken.js";
 import SuccessReg from "./routes/home/successReg.jsx";
 function App() {
   const token = useSelector(selectCurrentToken);
-  const [permission, setPermission] = useState(false);
   const refreshToken = useSelector(selectRefreshToken);
   const [cookieToken] = useCookies(["jwt-authorization"]);
   const [cookieRefreshToken] = useCookies(["jwt-refreshToken"]);
@@ -83,19 +82,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="signIn" element={<SignIn />} />
-          <Route
-            path="register"
-            element={<Register handlePermission={setPermission} />}
-          />
-          <Route
-            path="navigate-home"
-            element={
-              <SuccessReg
-                isAllowed={permission}
-                handlePermission={setPermission}
-              />
-            }
-          />
+          <Route path="register" element={<Register />} />
+          <Route path="navigate-home" element={<SuccessReg />} />
         </Route>
         <Route element={<RequireAuth />}>
           <Route path="user" element={<Root />} loader={rootLoader}>

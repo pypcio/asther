@@ -6,8 +6,9 @@ import validate from "../../features/others/validateInfo";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef } from "react";
-
-function Register({ handlePermission }) {
+import { useDispatch } from "react-redux";
+import { setRole } from "../../features/reduxSlice/protetedSlice";
+function Register() {
   const navigate = useNavigate();
   const [registerUser] = useRegisterMutation();
   const inputRef = useRef();
@@ -15,6 +16,7 @@ function Register({ handlePermission }) {
   const [passwordFocus, setPasswordFocus] = useState(true);
   const [emailFocus, setEmailFocus] = useState(true);
   const { handleChange, inputs, handleValidation, errors } = useForm(validate);
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const onTimeErrors = handleValidation();
@@ -29,7 +31,7 @@ function Register({ handlePermission }) {
           password: inputs.password,
           email: inputs.email,
         }).unwrap();
-        handlePermission(true);
+        dispatch(setRole("registered"));
         navigate("/navigate-home");
       } catch (error) {
         console.log(error);

@@ -134,6 +134,14 @@ i {
   background-color: hsl(0, 0%, 89%);
   border-radius: 0.5rem;
 }
+#reg-2 {
+  background-color: hsl(0, 0%, 89%);
+}
+#reg-1 {
+  margin: auto;
+  padding-bottom: 1rem;
+  width: 50%;
+}
 .box-settings label {
   color: #5a5959;
 }
