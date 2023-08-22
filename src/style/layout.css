@@ -1,0 +1,64 @@
+#wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+#wrap::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  background-image: url("../assets/landing-page-v5.jpg");
+  background-repeat: no-repeat;
+  background-position: 40% 28%;
+  background-size: cover;
+}
+
+#app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+/* #app:nth-child(2) {
+  height: 100%;
+} */
+#app:last-child {
+  margin-top: auto;
+  /* margin-bottom: 1rem; */
+  /* order: 1; */
+}
+/* #App {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+} */
+nav {
+  margin-bottom: 0.5rem;
+}
+.navlink {
+  text-decoration: none;
+}
+/* a:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+} */
+article {
+  background-color: aliceblue;
+}
+form input[type="text"]:hover,
+form input[type="password"]:hover,
+form input[type="email"]:hover,
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form input[type="email"]:focus {
+  background-color: #b1b6eb;
+}

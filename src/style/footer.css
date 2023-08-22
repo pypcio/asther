@@ -1,0 +1,9 @@
+footer {
+  margin-top: auto;
+  margin-bottom: 1rem;
+  order: 1;
+}
+.color-1 *,
+.color-1 a {
+  color: hsl(0, 1%, 19%);
+}
